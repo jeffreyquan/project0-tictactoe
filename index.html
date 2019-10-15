@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Tic Tac Toe - Marvel vs DC edition</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/tictactoe.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="main-logo">
+        <img src="images/marvel-vs-dc-banner-2.png" alt="marvel vs dc banner">
+      </div>
+      <main>
+
+          <div class="score" id="player-a-score">
+            <h2 class="clearfix">0</h2>
+          </div>
+          <div class="score" id="player-b-score">
+            <h2 class="clearfix">0</h2>
+          </div>
+
+        <div id="game-board">
+          <div class="row">
+            <div class="cell row0 col0 diagonal1" row=0 col=0></div>
+            <div class="cell row0 col1" row=0 col=1></div>
+            <div class="cell row0 col2 diagonal2" row=0 col=2></div>
+          </div>
+          <div class="row">
+            <div class="cell row1 col0" row=1 col=0></div>
+            <div class="cell row1 col1 diagonal1 diagonal2" row=1 col=1></div>
+            <div class="cell row1 col2" row=1 col=2></div>
+          </div>
+          <div class="row">
+            <div class="cell row2 col0 diagonal2" row=2 col=0></div>
+            <div class="cell row2 col1" row=2 col=1></div>
+            <div class="cell row2 col2 diagonal1" row=2 col=2></div>
+          </div>
+          <div class="buttons">
+            <button id="reset-game">Play Again</button>
+            <button id="reset-score">Reset Score</button>
+          </div>
+          <div id="message" class="pop-up">
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
+
+$('.cell')
