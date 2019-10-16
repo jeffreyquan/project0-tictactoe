@@ -150,7 +150,7 @@ $(document).ready(function() {
       tictactoe.score['playerA'] += 1;
       score = tictactoe.score['playerA'];
       $('#player-a-score h2').text(score);
-      $('#player-a-score').append('<p class="message pulse">MARVEL WINS</p>');
+      $('#player-a-score').append('<p class="message infinite animated pulse">MARVEL WINS</p>');
       // $('#message').html('<p>Marvel wins!</p>');
       $('.row div').addClass('clicked');
       $('#player-a-score img').css('border', '2px solid red');
@@ -162,7 +162,7 @@ $(document).ready(function() {
       tictactoe.score['playerB'] += 1;
       score = tictactoe.score['playerB'];
       $('#player-b-score h2').text(score);
-      $('#player-b-score').append('<p class="message pulse">DC WINS</p>');
+      $('#player-b-score').append('<p class="message infinite animated pulse">DC WINS</p>');
       // $('#message').html('<p>DC wins!</p>');
       $('.row div').addClass('clicked');
       $('#player-a-score img').css('opacity', '0.5');
