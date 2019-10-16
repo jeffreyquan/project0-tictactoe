@@ -2,7 +2,7 @@
 
 
 $(document).ready(function() {
-  const $boardCell = $('.cell');
+  let $boardCell = $('.cell');
 
   let resetGame = function() {
       tictactoe.resetBoard();
@@ -137,6 +137,7 @@ $(document).ready(function() {
       tictactoe.board[i][j] = iconInBackend;
       $this.append('<img src=' + iconOnScreen + '>');
       $this.addClass('clicked');
+      $this.css('box-shadow', '1px 1px 1px 1px black');
       tictactoe.moves += 1;
     }
     console.log('moves:', `${ tictactoe.moves }`);
@@ -149,7 +150,7 @@ $(document).ready(function() {
       tictactoe.score['playerA'] += 1;
       score = tictactoe.score['playerA'];
       $('#player-a-score h2').text(score);
-      $('#player-a-score').append('<p>MARVEL WINS</p>');
+      $('#player-a-score').append('<p class="message pulse">MARVEL WINS</p>');
       // $('#message').html('<p>Marvel wins!</p>');
       $('.row div').addClass('clicked');
       $('#player-a-score img').css('border', '2px solid red');
@@ -161,7 +162,7 @@ $(document).ready(function() {
       tictactoe.score['playerB'] += 1;
       score = tictactoe.score['playerB'];
       $('#player-b-score h2').text(score);
-      $('#player-b-score').append('<p>DC WINS</p>');
+      $('#player-b-score').append('<p class="message pulse">DC WINS</p>');
       // $('#message').html('<p>DC wins!</p>');
       $('.row div').addClass('clicked');
       $('#player-a-score img').css('opacity', '0.5');

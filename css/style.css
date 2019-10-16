@@ -31,6 +31,8 @@ body {
 
 h2 {
   text-align: center;
+  margin: 0;
+  padding: 10px 0px;
 }
 
 main {
@@ -43,15 +45,16 @@ main {
 
 .score {
   display: inline-block;
-  width: 19.7%;
+  width: 204px;
+  height: 40%;
   text-align: center;
   margin: auto;
   vertical-align: top;
 }
 
 .score img {
-  width: 160px;
-  height: 220px;
+  width: 200px;
+  height: 300px;
   margin: 0 auto;
   border: 1px lightgrey;
 }
@@ -115,7 +118,8 @@ main {
   width: 80px;
   height: 80px;
   padding: 20px;
-  border: 2px solid darkgrey;
+  border: 0.5px solid darkgrey;
+  box-shadow: 1px 1px 1px 1px darkgrey;
   margin: 1px;
 }
 
@@ -125,8 +129,12 @@ main {
 }
 
 .buttons button {
+  background-color: #FFFAFA;
   padding: 10px 20px;
   margin: 10px;
+  box-shadow: 1px 1px 1px 1px darkgrey;
+  top: 0px;
+  border-radius: 1em;
 }
 
 button:focus {
@@ -138,4 +146,33 @@ button:hover {
   opacity: 0.5;
   color: white;
   font-weight: bold;
+}
+
+button:active {
+  box-shadow: 1px 1px 1px 1px black;
+  top: 3px;
+}
+
+p.message {
+  border: 1px solid black;
+  padding: 5px 0px;
+  margin: 0;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+
+  50% {
+    transform: scale3d(1.05, 1.05, 1.05);
+  }
+
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+.pulse {
+  animation-name: pulse;
 }
