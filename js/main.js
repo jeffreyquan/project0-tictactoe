@@ -90,6 +90,7 @@ $(document).ready(function() {
     $('#message').css('display', 'none');
     $('.char-img img').css('opacity','1');
     $('.char-img img').css('opacity','1');
+    $('.winner-message').remove();
     // $('.score p').remove();
     $boardCell.hover(function() {
       if (tictactoe.turn === 0) {
@@ -270,8 +271,6 @@ $(document).ready(function() {
   $dcIcon.css('opacity', '0.5');
   $boardCell.addClass('no-hover');
 
-
-
   let $cmc = $('#confirmation-marvel-character');
 
   $cmc.on('click', function() {
@@ -317,8 +316,8 @@ $(document).ready(function() {
       $('#player-a-score .char-img img').css('border', '2px solid rgba(255,0,0,0.1)');
     }
 
-    $('#player-a-score p').text("0");
-    $('#player-b-score p').text("0");
+    $('#player-a-score p').text(0);
+    $('#player-b-score p').text(0);
     $cdc.addClass('no-hover');
   });
 
@@ -329,6 +328,7 @@ $(document).ready(function() {
     $('#player-b-score .char-img img').remove();
     $marvelIcon.css('opacity','0.5');
     $dcIcon.css('opacity','1');
+    $('#random-marvel-character').add('no-hover');
     $marvelIcon.addClass('no-hover');
     $dcIcon.removeClass('no-hover');
     setCharactersOnScreen();
@@ -348,6 +348,9 @@ $(document).ready(function() {
     }, 2000);
     $dcIcon.css('opacity','0.5');
     $dcIcon.addClass('no-hover');
+    $('#random-dc-character').addClass('no-hover');
+    $('#player-a-score p').text(0);
+    $('#player-b-score p').text(0);
     $boardCell.removeClass('no-hover');
     if (tictactoe.turn === 0) {
       $('#player-a-score .char-img img').css('border', '2px solid red');
@@ -392,10 +395,11 @@ $(document).ready(function() {
       tictactoe.score['playerA'] += 1;
       const score = tictactoe.score['playerA'];
       $('#player-a-score p').text(score);
-      $('#player-a-score').append('<p class="message infinite animated pulse">MARVEL WINS</p>');
+      $('#character-box-a').append('<p class="winner-message infinite animated pulse">MARVEL WINS</p>');
       $('#message').text("");
-      $('#message').append("<button id='reset-game'>Play Again</button>");
-      $('#message').append("<button id='reset-score'>Reset Score</button>");
+      $('#message').append("<div class='pop-up-buttons'></div>");
+      $('#message div').append("<button id='reset-game-pop-up'>Play Again</button>");
+      $('#message div').append("<button id='reset-score-pop-up'>Reset Score</button>");
       showMessage();
       // $('#message').html('<p>Marvel wins!</p>');
       stopClick();
@@ -407,11 +411,12 @@ $(document).ready(function() {
     } else if (result[0] === "o") {
       tictactoe.score['playerB'] += 1;
       const score = tictactoe.score['playerB'];
-      $('#player-b-score h2').text(score);
-      $('#player-b-score').append('<p class="message infinite animated pulse">DC WINS</p>');
+      $('#player-b-score p').text(score);
+      $('#character-box-b').append('<p class="winner-message infinite animated pulse">DC WINS</p>');
       $('#message').text("");
-      $('#message').append("<button id='reset-game'>Play Again</button>");
-      $('#message').append("<button id='reset-score'>Reset Score</button>");
+      $('#message').append("<div class='pop-up-buttons'></div>");
+      $('#message div').append("<button id='reset-game-pop-up'>Play Again</button>");
+      $('#message div').append("<button id='reset-score-pop-up'>Reset Score</button>");
       showMessage();
       // $('#message').html('<p>DC wins!</p>');
       stopClick();
@@ -422,8 +427,9 @@ $(document).ready(function() {
       return;
     } else if ((tictactoe.moves === 9 && result[0] !== "o" && result[0] !== "x") ) {
       $('#message').text('It\'s a draw!');
-      $('#message').append("<button id='reset-game'>Play Again</button>");
-      $('#message').append("<button id='reset-score'>Reset Score</button>");
+      $('#message').append("<div class='pop-up-buttons'></div>");
+      $('#message div').append("<button id='reset-game-pop-up'>Play Again</button>");
+      $('#message div').append("<button id='reset-score-pop-up'>Reset Score</button>");
       $('#message').css('display','block');
       $('#player-a-score .char-img img').css('border', '2px solid rgba(255,0,0,0.1)');
       $('#player-b-score .char-img img').css('border', '2px solid rgba(0,0,255,0.1)');
@@ -450,17 +456,48 @@ $(document).ready(function() {
     resetGame();
   });
 
-  $('#reset-score').on('click', function() {
+  $(document).on('click', '#reset-game-pop-up', function(event) {
+    resetGame();
+    hideMessage();
+  });
+  // $('#reset-game-pop-up').on('click', function() {
+  //   resetGame();
+  //   hideMessage();
+  // });
+
+  const resetScore = function() {
     tictactoe.resetScore(); // resets the score in the tic tac toe object so that both players have 0
-    $('h2').text('0');
+    $('#player-a-score p.current-score').text('0');
+    $('#player-b-score p.current-score').text('0');
     resetGame();
     $('#player-a-score .char-img img').remove();
     $('#player-b-score .char-img img').remove();
-    $boardCell.removeClass('no-hover');
-    $boardCell.removeClass('clicked');
+    // $boardCell.removeClass('no-hover');
+    // $boardCell.removeClass('clicked');
+    $boardCell.addClass('no-hover');
     $cmc.removeClass('no-hover');
-    $cdc.removeClass('no-hover');
+    $('#random-marvel-character').removeClass('no-hover');
+    $marvelIcon.css('opacity', '1');
+    $marvelIcon.removeClass('no-hover');
+    // $cdc.removeClass('no-hover');
+    $('#random-marvel-character').removeClass('no-hover');
+    // $('#random-dc-character').removeClass('no-hover');
+    $("#message").text("Marvel, select your hero");
+    showMessage();
+  };
+
+  $('#reset-score').on('click', function() {
+    resetScore();
   });
+
+  $(document).on('click', '#reset-score-pop-up', function(event) {
+    resetScore();
+    hideMessage();
+  });
+  // $('#reset-score-pop-up').on('click', function() {
+  //   resetScore();
+  //   hideMessage();
+  // });
 });
 
 
