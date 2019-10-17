@@ -27,6 +27,10 @@ $(document).ready(function() {
 
   $('table').append(board);
 
+  // construct the marvel character list to select from
+
+  
+
   let $boardCell = $('td');
 
   const resetGame = function() {
@@ -39,8 +43,8 @@ $(document).ready(function() {
     $boardCell.removeClass('no-hover');
     $boardCell.removeAttr('style');
     $('#message').html("");
-    $('#player-a-score > img').css('opacity','');
-    $('#player-b-score > img').css('opacity','');
+    $('.char-img img').css('opacity','1');
+    $('.char-img img').css('opacity','1');
     $('.score p').remove();
     $boardCell.hover(function() {
       if (tictactoe.turn === 0) {
@@ -58,12 +62,12 @@ $(document).ready(function() {
 
   resetGame();
   tictactoe.startsGame();
-  tictactoe.randomAssignIcon();
+  tictactoe.randomAssignCharacter();
 
   // set characters on characters onto the screen
   let setCharactersOnScreen = function() {
-    characterA = tictactoe.icons['playerA'][2];
-    characterB = tictactoe.icons['playerB'][2];
+    characterA = tictactoe.onScreenCharacters['playerA'][3];
+    characterB = tictactoe.onScreenCharacters['playerB'][3];
     $('#player-a-score div').prepend("<img src='" + characterA + "' class='cover'>");
     $('#player-b-score div').prepend("<img src='" + characterB + "' class='cover'>");
 
@@ -168,11 +172,11 @@ $(document).ready(function() {
     let iconToInput = "";
     let iconToScreen = "";
     if (tictactoe.turn === 0) {
-      iconInBackend = tictactoe.icons['playerA'][0];
-      iconOnScreen = tictactoe.icons['playerA'][1];
+      iconInBackend = tictactoe.onScreenCharacters['playerA'][0];
+      iconOnScreen = tictactoe.onScreenCharacters['playerA'][2];
     } else if (tictactoe.turn === 1) {
-      iconInBackend = tictactoe.icons['playerB'][0];
-      iconOnScreen = tictactoe.icons['playerB'][1];
+      iconInBackend = tictactoe.onScreenCharacters['playerB'][0];
+      iconOnScreen = tictactoe.onScreenCharacters['playerB'][2];
     }
     const i = $this.attr('row');
     const j = $this.attr('col');
@@ -244,7 +248,7 @@ $(document).ready(function() {
     resetGame();
     $('#player-a-score img').remove();
     $('#player-b-score img').remove();
-    tictactoe.randomAssignIcon();
+    tictactoe.randomAssignCharacter();
     setCharactersOnScreen();
     $boardCell.removeClass('no-hover');
     $boardCell.removeClass('clicked');

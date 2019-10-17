@@ -26,53 +26,190 @@ const tictactoe = {
     return gridBoard;
   },
 
-  icons: {
+  onScreenCharacters: {
     playerA: ["x"],
     playerB: ["o"]
   },
 
-  iconImages: {
-    marvel:
-    ['images/marvel-captain-america.png',
-    'images/marvel-thor.png'],
-    dc:
-    ['images/dc-batman.jpg',
-    'images/dc-superman.png']
+  characters: {
+    marvel: {
+      captainamerica: {
+        name: "Captain America",
+        symbol: 'images/characters/marvel/captainamerica/symbol.png',
+        profile: 'images/characters/marvel/captainamerica/profile.jpg',
+        icon: 'images/characters/marvel/captainamerica/icon.jpg'
+      },
+      thor: {
+        name: "Thor",
+        symbol: 'images/characters/marvel/thor/symbol.png',
+        profile: 'images/characters/marvel/thor/profile.jpg',
+        icon: 'images/characters/marvel/thor/icon.jpg'
+      },
+      spiderman: {
+        name: "Spiderman",
+        symbol: 'images/characters/marvel/spiderman/symbol.png',
+        profile: 'images/characters/marvel/spiderman/profile.jpeg',
+        icon: 'images/characters/marvel/spiderman/icon.jpg'
+      },
+      wolverine: {
+        name: "Wolverine",
+        symbol: 'images/characters/marvel/wolverine/symbol.png',
+        profile: 'images/characters/marvel/wolverine/profile.jpg',
+        icon: 'images/characters/marvel/wolverine/icon.jpg'
+      },
+      deadpool: {
+        name: "Deadpool",
+        symbol: 'images/characters/marvel/deadpool/symbol.png',
+        profile: 'images/characters/marvel/deadpool/profile.jpg',
+        icon: 'images/characters/marvel/deadpool/icon.jpg'
+      },
+      ironman: {
+        name: "Ironman",
+        symbol: 'images/characters/marvel/ironman/symbol.png',
+        profile: 'images/characters/marvel/ironman/profile.jpg',
+        icon: 'images/characters/marvel/ironmanicon.jpg'
+      },
+      thanos: {
+        name: "Thanos",
+        symbol: 'images/characters/marvel/thanos/symbol.png',
+        profile: 'images/characters/marvel/thanos/profile.jpg',
+        icon: 'images/characters/marvel/thanos/icon.jpg'
+      },
+      hulk: {
+        name: "Hulk",
+        symbol: 'images/characters/marvel/hulk/symbol.jpg',
+        profile: 'images/characters/marvel/hulk/profile.jpg',
+        icon: 'images/characters/marvel/hulk/icon.jpg'
+      },
+      captainmarvel: {
+        name: "Captain Marvel",
+        symbol: 'images/characters/marvel/captainmarvel/symbol.png',
+        profile: 'images/characters/marvel/captainmarvel/profile.jpg',
+        icon: 'images/characters/marvel/captainmarvel/symbol.png'
+      },
+
+    },
+    dc: {
+      batman: {
+        name: "Batman",
+        symbol: 'images/characters/dc/batman/symbol.jpg',
+        profile: 'images/characters/dc/batman/profile.jpg',
+        icon: 'images/characters/dc/batman/icon.jpeg'
+      },
+      superman: {
+        name: "Superman",
+        symbol: 'images/characters/dc/superman/symbol.png',
+        profile: 'images/characters/dc/superman/profile.jpg',
+        icon: 'images/characters/dc/superman/icon.jpg',
+      },
+      wonderwoman: {
+        name: "Wonder Woman",
+        symbol: 'images/characters/dc/wonderwoman/symbol.png',
+        profile: 'images/characters/dc/wonderwoman/profile.jpg',
+        icon: 'images/characters/dc/wonderwoman/icon.jpg',
+      },
+      aquaman: {
+        name: "Aquaman",
+        symbol: 'images/characters/dc/aquaman/symbol.png',
+        profile: 'images/characters/dc/aquaman/profile.jpg',
+        icon: 'images/characters/dc/aquaman/icon.jpg'
+      },
+      flash: {
+        name: "Flash",
+        symbol: 'images/characters/dc/flash/symbol.jpg',
+        profile: 'images/characters/dc/flash/profile.jpg',
+        icon: 'images/characters/dc/flash/icon.jpeg',
+      },
+      haljordan: {
+        name: "Hal Jordan",
+        symbol: 'images/characters/dc/haljordan/symbol.jpg',
+        profile: 'images/characters/dc/haljordan/profile.jpg',
+        icon: 'images/characters/dc/haljordan/icon.jpg'
+      },
+      catwoman: {
+        name: "Cat Woman",
+        symbol: 'images/characters/dc/catwoman/symbol.jpg',
+        profile: 'images/characters/dc/catwoman/profile.jpg',
+        icon: 'images/characters/dc/catwoman/icon.jpg'
+      },
+      joker: {
+        name: "Joker",
+        symbol: 'images/characters/dc/joker/symbol.png',
+        profile: 'images/characters/dc/joker/profile.jpeg',
+        icon: 'images/characters/dc/joker/icon.jpg'
+      },
+      harleyquinn: {
+        name: "Harley Quinn",
+        symbol: 'images/characters/dc/harleyquinn/symbol.png',
+        profile: 'images/characters/dc/harleyquinn/profile.jpg',
+        icon: 'images/characters/dc/harleyquinn/icon.jpeg'
+      },
+    }
   },
 
-  characterImages: {
-    marvel:
-    ['images/character-ca.jpg',
-    'images/character-thor.webp'],
-    dc:
-    ['images/character-bm.jpg',
-    'images/character-sm.jpg']
-  },
+  // iconImages: {
+  //   marvel:
+  //   ['images/marvel-captain-america.png',
+  //   'images/marvel-thor.png'],
+  //   dc:
+  //   ['images/dc-batman.jpg',
+  //   'images/dc-superman.png']
+  // },
+  //
+  // characterImages: {
+  //   marvel:
+  //   ['images/character-ca.jpg',
+  //   'images/character-thor.webp'],
+  //   dc:
+  //   ['images/character-bm.jpg',
+  //   'images/character-sm.jpg']
+  // },
 
-  randomAssignIcon: function() {
+  randomAssignCharacter: function() {
 
-    const lengthOfIconsPlayerA = this.icons['playerA'].length;
+    const lengthOfIconsPlayerA = this.onScreenCharacters['playerA'].length;
     if (lengthOfIconsPlayerA > 1) {
       for (let i = 0; i < lengthOfIconsPlayerA - 1; i++) {
-        this.icons['playerA'].pop();
+        this.onScreenCharacters['playerA'].pop();
       }
     }
 
-    const lengthOfIconsPlayerB = this.icons['playerB'].length;
+    const lengthOfIconsPlayerB = this.onScreenCharacters['playerB'].length;
     if (lengthOfIconsPlayerB > 1) {
       for (let i = 0; i < lengthOfIconsPlayerB - 1; i++) {
-        this.icons['playerB'].pop();
-        console.log()
+        this.onScreenCharacters['playerB'].pop();
       }
     }
 
-    const randomIndexForA = Math.floor(this.iconImages['marvel'].length * Math.random());
-    const randomIndexForB = Math.floor(this.iconImages['dc'].length * Math.random());
-    this.icons['playerA'].push(this.iconImages['marvel'][randomIndexForA]);
-    this.icons['playerB'].push(this.iconImages['dc'][randomIndexForB]);
-    this.icons['playerA'].push(this.characterImages['marvel'][randomIndexForA]);
-    this.icons['playerB'].push(this.characterImages['dc'][randomIndexForB]);
+    const marvelCharacters = Object.keys(this.characters.marvel);
+    const dcCharacters = Object.keys(this.characters.dc);
+
+    const randomIndexForA = Math.floor(marvelCharacters.length * Math.random());
+    const randomCharacterA = marvelCharacters[randomIndexForA];
+    const randomIndexForB = Math.floor(dcCharacters.length * Math.random());
+    const randomCharacterB = dcCharacters[randomIndexForB];
+
+    this.onScreenCharacters['playerA'].push(this.characters.marvel[randomCharacterA].name);
+    this.onScreenCharacters['playerA'].push(this.characters.marvel[randomCharacterA].symbol);
+    this.onScreenCharacters['playerA'].push(this.characters.marvel[randomCharacterA].profile);
+
+    this.onScreenCharacters['playerB'].push(this.characters.dc[randomCharacterB].name);
+    this.onScreenCharacters['playerB'].push(this.characters.dc[randomCharacterB].symbol);
+    this.onScreenCharacters['playerB'].push(this.characters.dc[randomCharacterB].profile);
+
+
   },
+
+
+
+
+  //   const randomIndexForA = Math.floor(this.iconImages['marvel'].length * Math.random());
+  //   const randomIndexForB = Math.floor(this.iconImages['dc'].length * Math.random());
+  //   this.icons['playerA'].push(this.iconImages['marvel'][randomIndexForA]);
+  //   this.icons['playerB'].push(this.iconImages['dc'][randomIndexForB]);
+  //   this.icons['playerA'].push(this.characterImages['marvel'][randomIndexForA]);
+  //   this.icons['playerB'].push(this.characterImages['dc'][randomIndexForB]);
+  // },
 
   score: {
     playerA: 0,
