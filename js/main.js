@@ -64,8 +64,8 @@ $(document).ready(function() {
   let setCharactersOnScreen = function() {
     characterA = tictactoe.icons['playerA'][2];
     characterB = tictactoe.icons['playerB'][2];
-    $('#player-a-score').prepend('<img src=' + characterA + '>');
-    $('#player-b-score').prepend('<img src=' + characterB + '>');
+    $('#player-a-score div').prepend("<img src='" + characterA + "' class='cover'>");
+    $('#player-b-score div').prepend("<img src='" + characterB + "' class='cover'>");
 
     if (tictactoe.turn === 0) {
       $('#player-a-score img').css('border', '2px solid red');
@@ -212,7 +212,7 @@ $(document).ready(function() {
       highlightWinningCells(result);
       return;
     } else if ((tictactoe.moves === 9 && result[0] !== "o" && result[0] !== "x") ) {
-      $('#message').html('<p>It\'s a draw!<p>');
+      $('#message').text('<p>It\'s a draw!</p>');
       $('#player-a-score img').css('border', '2px solid rgba(255,0,0,0.1)');
       $('#player-b-score img').css('border', '2px solid rgba(0,0,255,0.1)');
       $('#player-a-score img').css('opacity', '0.5');

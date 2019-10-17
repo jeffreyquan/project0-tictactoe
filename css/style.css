@@ -36,6 +36,7 @@ h2 {
 }
 
 main {
+  position: relative;
   background-color: white;
   width: 75%;
   margin: 0 auto;
@@ -45,21 +46,17 @@ main {
 
 .score {
   display: inline-block;
-  width: 204px;
   height: 40%;
   text-align: center;
   margin: auto;
   vertical-align: top;
 }
 
-.score img {
-  width: 200px;
-  height: 300px;
-  margin: 0 auto;
-  border: 1px lightgrey;
+#player-a-score {
+  float: left;
 }
 
-#player-a-score {
+#player-a-score div {
   float: left;
 }
 
@@ -73,10 +70,31 @@ main {
   float: right;
 }
 
+#player-b-score div {
+  float: right;
+}
+
 #player-b-score img {
   float: right;
   border-top-right-radius: 1em;
   border-bottom-left-radius: 1em;
+}
+
+.char-img {
+  display: flex;
+  width: 60%;
+  height: 90%;
+}
+
+.char-img img {
+  width: 150px;
+  height: 225px;
+  margin: 0 auto;
+  border: 1px lightgrey;
+}
+
+.cover {
+  object-fit: cover;
 }
 
 .clearfix {
@@ -85,7 +103,6 @@ main {
 
 .score div {
   display: inline-block;
-  width: 49%;
   text-align: center;
 }
 
@@ -167,6 +184,8 @@ td {
 .buttons {
   text-align: center;
   padding: 20px;
+  width: 50%;
+  margin: 0 auto;
 }
 
 .buttons button {
@@ -202,4 +221,11 @@ p.message {
 
 .no-hover {
   pointer-events: none;
+}
+
+#message {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, 50%);
 }
