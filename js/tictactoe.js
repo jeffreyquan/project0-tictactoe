@@ -31,6 +31,28 @@ const tictactoe = {
     playerB: ["o"]
   },
 
+  marvelBoard: {},
+
+  dcBoard: {},
+
+  createCharacterBoard: function() {
+
+    // marvel Characters
+
+    const marvelCharacters = Object.keys(this.characters.marvel);
+
+    for (let i = 0; i < marvelCharacters.length; i++) {
+      const character = marvelCharacters[i];
+      this.marvelBoard[character] = this.characters.marvel[character].icon;
+    }
+
+    const dcCharacters = Object.keys(this.characters.dc);
+    for (let i = 0; i < dcCharacters.length; i++) {
+      const character = dcCharacters[i];
+      this.dcBoard[character] = this.characters.dc[character].icon;
+    }
+  },
+
   characters: {
     marvel: {
       captainamerica: {
@@ -67,7 +89,7 @@ const tictactoe = {
         name: "Ironman",
         symbol: 'images/characters/marvel/ironman/symbol.png',
         profile: 'images/characters/marvel/ironman/profile.jpg',
-        icon: 'images/characters/marvel/ironmanicon.jpg'
+        icon: 'images/characters/marvel/ironman/icon.jpg'
       },
       thanos: {
         name: "Thanos",
@@ -85,10 +107,10 @@ const tictactoe = {
         name: "Captain Marvel",
         symbol: 'images/characters/marvel/captainmarvel/symbol.png',
         profile: 'images/characters/marvel/captainmarvel/profile.jpg',
-        icon: 'images/characters/marvel/captainmarvel/symbol.png'
+        icon: 'images/characters/marvel/captainmarvel/icon.jpg'
       },
-
     },
+
     dc: {
       batman: {
         name: "Batman",
@@ -147,6 +169,38 @@ const tictactoe = {
     }
   },
 
+  selectMarvelCharacter: function(character) {
+
+    let key = character;
+    const lengthOfIconsPlayerA = this.onScreenCharacters['playerA'].length;
+    if (lengthOfIconsPlayerA > 1) {
+      for (let i = 0; i < lengthOfIconsPlayerA - 1; i++) {
+        this.onScreenCharacters['playerA'].pop();
+      }
+    }
+
+    this.onScreenCharacters['playerA'].push(this.characters.marvel[key].name);
+    this.onScreenCharacters['playerA'].push(this.characters.marvel[key].symbol);
+    this.onScreenCharacters['playerA'].push(this.characters.marvel[key].profile);
+
+  },
+
+  selectDcCharacter: function(character) {
+
+    let key = character;
+    const lengthOfIconsPlayerB = this.onScreenCharacters['playerB'].length;
+    if (lengthOfIconsPlayerB > 1) {
+      for (let i = 0; i < lengthOfIconsPlayerB - 1; i++) {
+        this.onScreenCharacters['playerB'].pop();
+      }
+    }
+
+    this.onScreenCharacters['playerB'].push(this.characters.dc[key].name);
+    this.onScreenCharacters['playerB'].push(this.characters.dc[key].symbol);
+    this.onScreenCharacters['playerB'].push(this.characters.dc[key].profile);
+
+  },
+
   // iconImages: {
   //   marvel:
   //   ['images/marvel-captain-america.png',
@@ -165,7 +219,7 @@ const tictactoe = {
   //   'images/character-sm.jpg']
   // },
 
-  randomAssignCharacter: function() {
+  randomAssignMarvelCharacter: function() {
 
     const lengthOfIconsPlayerA = this.onScreenCharacters['playerA'].length;
     if (lengthOfIconsPlayerA > 1) {
@@ -173,6 +227,18 @@ const tictactoe = {
         this.onScreenCharacters['playerA'].pop();
       }
     }
+
+    const marvelCharacters = Object.keys(this.characters.marvel);
+
+    const randomIndexForA = Math.floor(marvelCharacters.length * Math.random());
+    const randomCharacterA = marvelCharacters[randomIndexForA];
+
+    this.onScreenCharacters['playerA'].push(this.characters.marvel[randomCharacterA].name);
+    this.onScreenCharacters['playerA'].push(this.characters.marvel[randomCharacterA].symbol);
+    this.onScreenCharacters['playerA'].push(this.characters.marvel[randomCharacterA].profile);
+  },
+
+  randomAssignDcCharacter: function() {
 
     const lengthOfIconsPlayerB = this.onScreenCharacters['playerB'].length;
     if (lengthOfIconsPlayerB > 1) {
@@ -184,20 +250,14 @@ const tictactoe = {
     const marvelCharacters = Object.keys(this.characters.marvel);
     const dcCharacters = Object.keys(this.characters.dc);
 
-    const randomIndexForA = Math.floor(marvelCharacters.length * Math.random());
-    const randomCharacterA = marvelCharacters[randomIndexForA];
+
     const randomIndexForB = Math.floor(dcCharacters.length * Math.random());
     const randomCharacterB = dcCharacters[randomIndexForB];
 
-    this.onScreenCharacters['playerA'].push(this.characters.marvel[randomCharacterA].name);
-    this.onScreenCharacters['playerA'].push(this.characters.marvel[randomCharacterA].symbol);
-    this.onScreenCharacters['playerA'].push(this.characters.marvel[randomCharacterA].profile);
 
     this.onScreenCharacters['playerB'].push(this.characters.dc[randomCharacterB].name);
     this.onScreenCharacters['playerB'].push(this.characters.dc[randomCharacterB].symbol);
     this.onScreenCharacters['playerB'].push(this.characters.dc[randomCharacterB].profile);
-
-
   },
 
 

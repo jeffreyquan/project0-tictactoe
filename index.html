@@ -17,13 +17,29 @@
       <main>
         <div class="score" id="player-a-score">
           <div class="char-img"></div>
-          <h2 class="clearfix">0</h2>
-          <div class="marvel-characters"></div>
+          <div class="marvel-board">
+            <table>
+            </table>
+          </div>
+          <div class="char-selection-buttons">
+            <button id="confirmation-marvel-character" class="confirm">Confirm Selection</button>
+            <button id="random-marvel-character" class="random">Random</button>
+          </div>
+          <h2 id="marvel-name" class="clearfix"></h2>
+          <p class="current-score">0</p>
         </div>
         <div class="score" id="player-b-score">
           <div class="char-img"></div>
-          <h2 class="clearfix">0</h2>
-          <div class="dc-characters"></div>
+          <div class="dc-board">
+            <table>
+            </table>
+          </div>
+          <div class="char-selection-buttons">
+            <button id="confirmation-dc-character" class="confirm">Confirm Selection</button>
+            <button id="random-dc-character" class="random">Random</button>
+          </div>
+          <h2 id="dc-name" class="clearfix"></h2>
+          <p class="current-score">0</p>
         </div>
         <div id="game-board">
           <table>
