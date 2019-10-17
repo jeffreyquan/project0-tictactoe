@@ -93,11 +93,14 @@ main {
   min-width: 407px;
   display: inline-block;
   width: 50%;
-  height: 600px;
   margin: 0 auto;
 }
 
-.row {
+table {
+  margin: 0 auto;
+}
+
+tr {
   position: relative;
   width: 100%;
   margin: auto;
@@ -105,12 +108,25 @@ main {
   text-align: center;
 }
 
-.row div img {
+/* .row {
+  position: relative;
+  width: 100%;
+  margin: auto;
+  padding: 0px 0px 4px 0px;
+  text-align: center;
+} */
+
+td img {
   width: 80px;
   height: 80px;
 }
 
-.row div {
+/* .row div img {
+  width: 80px;
+  height: 80px;
+} */
+
+td {
   display: inline-block;
   vertical-align: middle;
   text-align: center;
@@ -118,9 +134,34 @@ main {
   width: 80px;
   height: 80px;
   padding: 20px;
-  border: 0.5px solid darkgrey;
-  box-shadow: 1px 1px 1px 1px darkgrey;
+  border: 1px solid darkgrey;
+  box-shadow: 1px 1px 1px 1px rgba(128,128,128,0.6);
+  margin: 3px;
+}
+
+/* .row div {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 30px;
+  width: 80px;
+  height: 80px;
+  padding: 20px;
+  border: 1px solid darkgrey;
+  box-shadow: 1px 1px 1px 1px rgba(128,128,128,0.6);
   margin: 1px;
+} */
+
+.playerA.cell:hover {
+  background-color: red;
+  border: 1px solid;
+  border-image: conic-gradient(red, yellow, lime, aqua, blue, magenta, red) 1;
+}
+
+.playerB.cell:hover {
+  background-color: blue;
+  border: 1px solid;
+  border-image: conic-gradient(red, magenta, blue, aqua, lime, yellow, red) 1;
 }
 
 .buttons {
@@ -157,4 +198,8 @@ p.message {
   border: 1px solid black;
   padding: 5px 0px;
   margin: 0;
+}
+
+.no-hover {
+  pointer-events: none;
 }

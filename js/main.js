@@ -2,28 +2,58 @@
 
 
 $(document).ready(function() {
-  let $boardCell = $('.cell');
 
-  let resetGame = function() {
-      tictactoe.resetBoard();
-      tictactoe.moves = 0;
-      $boardCell.each(function() {
-        $(this).text('');
-      });
-      $('.row div').removeClass('clicked');
-      $('.row div').removeAttr('style');
-      $('#message').html("");
-      $('#player-a-score img').css('opacity','');
-      $('#player-b-score img').css('opacity','');
-      $('.score p').remove();
-      $boardCell.hover(function() {
-        if (tictactoe.turn === 0) {
-          $(this).css({'background-color':'red', 'border': '3px solid', 'border-image':'conic-gradient(red, yellow, lime, aqua, blue, magenta, red) 1'});
-        } else if (tictactoe.turn === 1) {
-          $(this).css({'background-color':'blue', 'border': '3px solid', 'border-image':'conic-gradient(red, magenta, blue, aqua, lime, yellow, red) 1'})
-        }}, function() {
-          $(this).css({'background-color':'', 'border':''})
-      });
+  // construct game board (grid)
+
+  // stores the current size from the tictactoe object
+  const n = tictactoe.gridSize;
+
+  let board = '';
+  for (let i = 0; i < n; i++) {
+    board += "<tr>";
+    for (let j = 0; j < n; j++) {
+      board += "<td id='c" + i.toString() + j.toString() + "' class='cell row" + i.toString() + " col" + j.toString();
+
+      if (i === j) {
+        board += " diagonal1";
+      }
+      if (j === n - 1 - i) {
+        board +=" diagonal2";
+      }
+      board += "' row=" + i.toString() + " col=" + j.toString() + "></td>";
+    }
+    board += "</tr>"
+  }
+
+  $('table').append(board);
+
+  let $boardCell = $('td');
+
+  const resetGame = function() {
+    tictactoe.resetBoard();
+    tictactoe.moves = 0;
+    $boardCell.each(function() {
+      $(this).text('');
+    });
+    $boardCell.removeClass('clicked');
+    $boardCell.removeClass('no-hover');
+    $boardCell.removeAttr('style');
+    $('#message').html("");
+    $('#player-a-score > img').css('opacity','');
+    $('#player-b-score > img').css('opacity','');
+    $('.score p').remove();
+    $boardCell.hover(function() {
+      if (tictactoe.turn === 0) {
+        $(this).removeClass('playerB');
+        $(this).addClass('playerA');
+      } else if (tictactoe.turn === 1) {
+        $(this).removeClass('playerA');
+        $(this).addClass('playerB');
+      }}, function() {
+        $(this).removeClass('playerA');
+        $(this).removeClass('playerB');
+      }
+    );
   };
 
   resetGame();
@@ -31,25 +61,29 @@ $(document).ready(function() {
   tictactoe.randomAssignIcon();
 
   // set characters on characters onto the screen
-  characterA = tictactoe.icons['playerA'][2];
-  characterB = tictactoe.icons['playerB'][2];
-  $('#player-a-score').prepend('<img src=' + characterA + '>');
-  $('#player-b-score').prepend('<img src=' + characterB + '>');
+  let setCharactersOnScreen = function() {
+    characterA = tictactoe.icons['playerA'][2];
+    characterB = tictactoe.icons['playerB'][2];
+    $('#player-a-score').prepend('<img src=' + characterA + '>');
+    $('#player-b-score').prepend('<img src=' + characterB + '>');
 
-  if (tictactoe.turn === 0) {
-    $('#player-a-score img').css('border', '2px solid red');
-    $('#player-b-score img').css('border', '2px solid rgba(0,0,255,0.1)');
-  } else if (tictactoe.turn === 1) {
-    $('#player-b-score img').css('border', '2px solid blue');
-    $('#player-a-score img').css('border', '2px solid rgba(255,0,0,0.1)');
-  }
+    if (tictactoe.turn === 0) {
+      $('#player-a-score img').css('border', '2px solid red');
+      $('#player-b-score img').css('border', '2px solid rgba(0,0,255,0.1)');
+    } else if (tictactoe.turn === 1) {
+      $('#player-b-score img').css('border', '2px solid blue');
+      $('#player-a-score img').css('border', '2px solid rgba(255,0,0,0.1)');
+    }
+  };
+
+  setCharactersOnScreen();
 
   const highlightWinningCells = function(array) {
     let winningCellCss = {};
     if (array[0] === 'x') {
-      winningCellCss = {'background-color':'red','border-image':'conic-gradient(red, yellow, lime, aqua, blue, magenta, red) 1'};
+      winningCellCss = {'background-color':'red','border': '1px solid', 'border-image':'conic-gradient(red, yellow, lime, aqua, blue, magenta, red) 1'};
     } else if (array[0] === 'o') {
-      winningCellCss = {'background-color':'blue','border': '3px solid', 'border-image':'conic-gradient(red, yellow, lime, aqua, blue, magenta, red) 1'};
+      winningCellCss = {'background-color':'blue','border': '1px solid', 'border-image':'conic-gradient(red, yellow, lime, aqua, blue, magenta, red) 1'};
     }
 
     if (array[1] === 'row') {
@@ -84,6 +118,15 @@ $(document).ready(function() {
     }
   };
 
+  let stopClick = function() {
+    $boardCell.addClass('no-hover');
+  };
+
+  let stopHover = function() {
+    $boardCell.addClass('no-hover');
+  };
+
+
     // let bgColor = '';
     // if (array[0] === 'x') {
     //   bgColor = "'background-color':'red'";
@@ -117,7 +160,7 @@ $(document).ready(function() {
 
   $boardCell.on('click', function() {
 
-    $this = $(this);
+    const $this = $(this);
     if ($this.hasClass('clicked')) {
       return false;
     }
@@ -140,11 +183,9 @@ $(document).ready(function() {
       $this.css('box-shadow', '1px 1px 1px 1px black');
       tictactoe.moves += 1;
     }
-    console.log('moves:', `${ tictactoe.moves }`);
 
     tictactoe.checkWinner();
     let result = tictactoe.checkWinner();
-    console.log(result);
 
     if (result[0] === "x") {
       tictactoe.score['playerA'] += 1;
@@ -152,10 +193,10 @@ $(document).ready(function() {
       $('#player-a-score h2').text(score);
       $('#player-a-score').append('<p class="message infinite animated pulse">MARVEL WINS</p>');
       // $('#message').html('<p>Marvel wins!</p>');
-      $('.row div').addClass('clicked');
+      stopClick();
       $('#player-a-score img').css('border', '2px solid red');
       $('#player-b-score img').css('opacity', '0.5');
-      $boardCell.off('mouseenter mouseleave');
+      stopHover();
       highlightWinningCells(result);
       return;
     } else if (result[0] === "o") {
@@ -164,10 +205,10 @@ $(document).ready(function() {
       $('#player-b-score h2').text(score);
       $('#player-b-score').append('<p class="message infinite animated pulse">DC WINS</p>');
       // $('#message').html('<p>DC wins!</p>');
-      $('.row div').addClass('clicked');
+      stopClick();
       $('#player-a-score img').css('opacity', '0.5');
       $('#player-b-score img').css('border', '2px solid blue');
-      $boardCell.off('mouseenter mouseleave');
+      stopHover();
       highlightWinningCells(result);
       return;
     } else if ((tictactoe.moves === 9 && result[0] !== "o" && result[0] !== "x") ) {
@@ -176,7 +217,7 @@ $(document).ready(function() {
       $('#player-b-score img').css('border', '2px solid rgba(0,0,255,0.1)');
       $('#player-a-score img').css('opacity', '0.5');
       $('#player-b-score img').css('opacity', '0.5');
-      $boardCell.off('mouseenter mouseleave');
+      $this.off('hover');
       highlightWinningCells(result);
       return;
     };
@@ -201,6 +242,12 @@ $(document).ready(function() {
     tictactoe.resetScore();
     $('h2').text('0');
     resetGame();
+    $('#player-a-score img').remove();
+    $('#player-b-score img').remove();
+    tictactoe.randomAssignIcon();
+    setCharactersOnScreen();
+    $boardCell.removeClass('no-hover');
+    $boardCell.removeClass('clicked');
   });
 });
 
