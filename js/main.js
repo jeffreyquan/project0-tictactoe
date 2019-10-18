@@ -322,6 +322,7 @@ $(document).ready(function() {
     $('#player-a-score p').text(0);
     $('#player-b-score p').text(0);
     $cdc.addClass('no-hover');
+    $('#random-dc-character').addClass('no-hover');
     $('#reset-game').removeClass('no-hover');
     $('#reset-score').removeClass('no-hover');
   });
@@ -497,6 +498,9 @@ $(document).ready(function() {
     // $('#random-dc-character').removeClass('no-hover');
     $("#message").text("Marvel, select your hero");
     $('#reset-game').addClass('no-hover');
+    tictactoe.randomAssignMarvelCharacter();
+    tictactoe.randomAssignDcCharacter();
+    setCharactersOnScreen();
     showMessage();
   };
 
