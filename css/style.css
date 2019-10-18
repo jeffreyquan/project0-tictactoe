@@ -161,11 +161,11 @@ table {
   margin: 0 auto;
 }
 
-tr {
+#game-board table tr {
   position: relative;
   width: 100%;
   margin: auto;
-  padding: 0px 0px 4px 0px;
+  padding: 0px 0px 3px 0px;
   text-align: center;
 }
 
@@ -289,8 +289,8 @@ p.message {
   height: 60px;
   border: 1px solid white;
   /* border: 2px solid grey; */
-  border-radius: 5px;
-  pading: 0px;
+  /* border-radius: 5px; */
+  padding: 0px;
 }
 
 .marvel-board table tr td:hover {
@@ -305,8 +305,13 @@ p.message {
   border-radius: 5px;
 }
 
-.marvel-board tr {
+.marvel-board table {
+  border-spacing: 0px;
+}
+
+.marvel-board table tr {
   padding: 0px;
+  margin: 0px;
 }
 
 .dc-board td {
@@ -318,8 +323,9 @@ p.message {
   padding: 0px;
 }
 
-.dc-board tr {
+.dc-board table tr {
   padding: 0px;
+  margin: 0px;
 }
 
 .dc-board table tr td:hover {
@@ -332,6 +338,10 @@ p.message {
   margin: 0;
   padding: 1px;
   border-radius: 5px;
+}
+
+.character-icons {
+  margin: 0px;
 }
 
 .char-selection-buttons {

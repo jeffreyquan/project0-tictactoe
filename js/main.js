@@ -90,7 +90,9 @@ $(document).ready(function() {
     $('#message').css('display', 'none');
     $('.char-img img').css('opacity','1');
     $('.char-img img').css('opacity','1');
-    $('.winner-message').remove();
+    $('.winner-message-dc').remove();
+    $('.winner-message-marvel').remove();
+    tictactoe.startsGame();
     // $('.score p').remove();
     $boardCell.hover(function() {
       if (tictactoe.turn === 0) {
@@ -287,6 +289,8 @@ $(document).ready(function() {
     $marvelIcon.css('opacity', '0.5');
     $dcIcon.removeClass('no-hover');
     $dcIcon.css('opacity', '');
+    $cdc.removeClass('no-hover');
+    $('#random-marvel-character').removeClass('no-hover');
     $('#message').text("DC, choose your hero.");
     showMessage();
     $cmc.addClass('no-hover');
@@ -496,8 +500,9 @@ $(document).ready(function() {
     // $cdc.removeClass('no-hover');
     $('#random-marvel-character').removeClass('no-hover');
     // $('#random-dc-character').removeClass('no-hover');
-    $("#message").text("Marvel, select your hero");
+    $("#message").text("Marvel, select your hero.");
     $('#reset-game').addClass('no-hover');
+    tictactoe.startsGame();
     tictactoe.randomAssignMarvelCharacter();
     tictactoe.randomAssignDcCharacter();
     setCharactersOnScreen();
@@ -510,7 +515,6 @@ $(document).ready(function() {
 
   $(document).on('click', '#reset-score-pop-up', function(event) {
     resetScore();
-    hideMessage();
   });
   // $('#reset-score-pop-up').on('click', function() {
   //   resetScore();
