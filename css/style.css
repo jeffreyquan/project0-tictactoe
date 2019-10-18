@@ -227,7 +227,9 @@ tr {
 }
 
 .buttons button {
-  background-color: #FFFAFA;
+  background-color: #404040;
+  color: white;
+  font-weight: bold;
   padding: 10px 20px;
   margin: 10px;
   box-shadow: 1px 1px 1px 1px darkgrey;
@@ -328,20 +330,41 @@ p.message {
 }
 
 .confirm {
-  background-color: black;
+  background-color: #000080;
   color: white;
   text-align: center;
+  box-shadow: 0.2px 0.2px 0.2px 0.2px black;
 }
 
 .random {
+  background-color: #B22222;
+  color: white;
   text-align: center;
+  box-shadow: 0.2px 0.2px 0.2px 0.2px black;
 }
 
-.winner-message {
+.winner-message-marvel {
   width: 100%;
-  border: 1px solid green;
-  background-color: lightgreen;
+  border: 1px solid silver;
+  background-color: #B22222;
+  border-radius: 3px;
+  font-family: Arial, serif;
+  box-shadow: 1px 1px 1px 1px black;
   color: white;
+  font-weight: bold;
+  padding: 5px;
+}
+
+.winner-message-dc {
+  width: 100%;
+  border: 1px solid silver;
+  background-color: #000080;
+  border-radius: 3px;
+  font-family: Arial, serif;
+  box-shadow: 1px 1px 1px 1px black;
+  color: white;
+  font-weight: bold;
+  padding: 5px;
 }
 
 p.current-score {
