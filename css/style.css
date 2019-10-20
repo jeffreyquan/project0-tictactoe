@@ -265,7 +265,7 @@ p.message {
   margin: 0;
 }
 
-.no-hover {
+.no-events {
   pointer-events: none;
 }
 
@@ -360,16 +360,22 @@ p.message {
 
 .confirm {
   background-color: #000080;
+  height: 40px;
+  font-weight: bold;
   color: white;
   text-align: center;
   box-shadow: 0.2px 0.2px 0.2px 0.2px black;
+  border-radius: 1em;
 }
 
 .random {
   background-color: #B22222;
+  height: 40px;
+  font-weight: bold;
   color: white;
   text-align: center;
   box-shadow: 0.2px 0.2px 0.2px 0.2px black;
+  border-radius: 1em;
 }
 
 .winner-message-marvel {
@@ -425,4 +431,20 @@ p.current-score {
   height: 80px;
   top: 0px;
   /* float: left; */
+}
+
+#rematch-pop-up {
+  background-color: #f14e4e;
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 10px;
+  box-shadow: 1px 1px 1px 1px darkgrey;
+  top: 0px;
+  border-radius: 1em;
+}
+
+#rematch-pop-up:hover {
+  background-color: red;
+  opacity: 1;
 }

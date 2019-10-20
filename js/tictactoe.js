@@ -1,17 +1,31 @@
+// This js file deals with all the game logic
 
 const tictactoe = {
 
+  // size of the game board
+  // note: the game board can be scaled bigger by changing this number but kept at 3 due to simplicity
   gridSize: 3,
 
+  mode: "two-player",
+
+  // gives a number between 0 and 1 to determine who starts first
+  // player A is 0 and player B is 1
   startsGame: function() {
     this.turn = Math.floor((Math.random() * 2));
   },
 
+  // alternates between 0 and 1 to show who's turn it is
+  // player A is 0 and player B is 1
   turn: 0,
 
+  // a count of the number of moves in a game
   moves: 0,
 
-  board: function() {
+  // constructs an array representing the game board
+  // note: this function can build a bigger game board
+  board: [],
+
+  constructBoard: function() {
 
     let gridBoard = [];
     let size = this.gridSize;
@@ -23,21 +37,111 @@ const tictactoe = {
       gridBoard.push(arrayRow);
     }
 
-    return gridBoard;
+    this.board = gridBoard;
   },
 
-  onScreenCharacters: {
+  // arrays of players A and B that still also store their chosen characters' names and their respective images to display on screen
+  selectedCharacters: {
     playerA: ["x"],
     playerB: ["o"]
   },
 
+  // records the current score
+  score: {
+    playerA: 0,
+    playerB: 0
+  },
+
+  // resets the scores to 0 for any "new" game
+  resetScore: function() {
+    this.score['playerA'] = 0;
+    this.score['playerB'] = 0;
+  },
+
+  // checks each row, column and diagonal to determine if there is a winning combination
+  // note: this function can get the winner for any n x n board
+  checkWinner: function() {
+
+    // Horizontal: check to see if items in each row are the same
+
+    let n = this.gridSize;
+    let currentBoard = this.board;
+
+    for (let i = 0; i < n; i++) {
+      let counter = 1;
+      for (let j = 0; j < n - 1; j++) {
+        if (currentBoard[i][j] === currentBoard[i][j+1] && currentBoard[i][j] !== ""){
+          counter += 1;
+        }
+
+        // if n items (in this case, 3) in a row are the same, then we have a winner
+        if (counter === n) {
+          return [currentBoard[i][0],'row', i]; // index 0 returns an "x" or "o" and index 1 and 2 returns which row the winning combination occurred
+        }
+      }
+      counter = 1;
+    }
+
+    // Vertical: check to see if the items in each column are the same
+
+    for (let i = 0; i < n; i++) {
+      let counter = 1;
+      for (let j = 0; j < n - 1; j++) {
+        if (currentBoard[j][i] === currentBoard[j+1][i] && currentBoard[j][i] !== "") {
+          counter += 1;
+        }
+
+        // if n items (in this case, 3) in a column are the same, then we have a winner
+        if (counter === n) {
+          return [currentBoard[0][i],'col', i]; // index 0 returns an "x" or "o" and index 1 and 2 returns which column the winning combination occurred
+        }
+      }
+      counter = 1;
+    }
+
+    // Diagonals: check the two diagonals to see if the items are the same
+
+    // 'Diagonal 1' denotes the diagonal starting from top left to the bottom right of the board
+    let counter = 1;
+
+    for (let i = 0; i < n - 1; i++) {
+      if (currentBoard[i][i] === currentBoard[i+1][i+1] && currentBoard[i][i] !== "") {
+        counter += 1;
+      }
+
+      // if n items (in this case, 3) in a column are the same, then we have a winner in 'Diagonal 1'
+      if (counter === n) {
+        return [currentBoard[0][0],'diagonal', 1]
+      }
+    }
+
+    // 'Diagonal 2' denotes the diagonal starting from the bottom left to the top right of the board
+    counter =  1;
+
+    for (let i = 0; i < n - 1; i++) {
+      if ((currentBoard[i][n - 1 - i] === currentBoard[i+1][n - 2 - i]) && currentBoard[i][n - 1 - i] !== "") {
+        counter += 1;
+      }
+
+      // if n items (in this case, 3) in a column are the same, then we have a winner in 'Diagonal 2'
+      if (counter === n) {
+        return [currentBoard[0][n-1], 'diagonal', 2]
+      }
+    }
+
+      return '';
+  },
+
+  // stores the Marvel characters to select from, where the key-value pairs are character's name and small picture icon respectively
   marvelBoard: {},
 
+  // stores the DC characters to select from, where the key-value pairs are character's name and small picture icon respectively
   dcBoard: {},
 
+  // iterates through the Marvel characters' object and DC characters' object (in the characters object) to create the two character boards above
   createCharacterBoard: function() {
 
-    // marvel Characters
+    // Marvel Characters
 
     const marvelCharacters = Object.keys(this.characters.marvel);
 
@@ -46,6 +150,8 @@ const tictactoe = {
       this.marvelBoard[character] = this.characters.marvel[character].icon;
     }
 
+    // DC characters
+
     const dcCharacters = Object.keys(this.characters.dc);
     for (let i = 0; i < dcCharacters.length; i++) {
       const character = dcCharacters[i];
@@ -53,6 +159,8 @@ const tictactoe = {
     }
   },
 
+  // character object that stores Marvel and DC characters
+  // name is the name of the character, symbol is what is being placed on the game board, profile is the picture of the character and icon is small picture shown in the respective character boards for selection
   characters: {
     marvel: {
       captainamerica: {
@@ -169,211 +277,210 @@ const tictactoe = {
     }
   },
 
+  // stores Marvel character that player A selects from Marvel character board
   selectMarvelCharacter: function(character) {
 
-    let key = character;
-    const lengthOfIconsPlayerA = this.onScreenCharacters['playerA'].length;
-    if (lengthOfIconsPlayerA > 1) {
-      for (let i = 0; i < lengthOfIconsPlayerA - 1; i++) {
-        this.onScreenCharacters['playerA'].pop();
+    const lengthOfArrayA = this.selectedCharacters['playerA'].length;
+    if (lengthOfArrayA > 1) {
+      for (let i = 0; i < lengthOfArrayA - 1; i++) {
+        this.selectedCharacters['playerA'].pop();
       }
     }
 
-    this.onScreenCharacters['playerA'].push(this.characters.marvel[key].name);
-    this.onScreenCharacters['playerA'].push(this.characters.marvel[key].symbol);
-    this.onScreenCharacters['playerA'].push(this.characters.marvel[key].profile);
+    this.selectedCharacters['playerA'].push(this.characters.marvel[character].name);
+    this.selectedCharacters['playerA'].push(this.characters.marvel[character].symbol);
+    this.selectedCharacters['playerA'].push(this.characters.marvel[character].profile);
 
   },
 
+  // stores DC character that player B selects from Marvel character board
   selectDcCharacter: function(character) {
 
-    let key = character;
-    const lengthOfIconsPlayerB = this.onScreenCharacters['playerB'].length;
-    if (lengthOfIconsPlayerB > 1) {
-      for (let i = 0; i < lengthOfIconsPlayerB - 1; i++) {
-        this.onScreenCharacters['playerB'].pop();
+    const lengthOfArrayB = this.selectedCharacters['playerB'].length;
+    if (lengthOfArrayB > 1) {
+      for (let i = 0; i < lengthOfArrayB - 1; i++) {
+        this.selectedCharacters['playerB'].pop();
       }
     }
 
-    this.onScreenCharacters['playerB'].push(this.characters.dc[key].name);
-    this.onScreenCharacters['playerB'].push(this.characters.dc[key].symbol);
-    this.onScreenCharacters['playerB'].push(this.characters.dc[key].profile);
+    this.selectedCharacters['playerB'].push(this.characters.dc[character].name);
+    this.selectedCharacters['playerB'].push(this.characters.dc[character].symbol);
+    this.selectedCharacters['playerB'].push(this.characters.dc[character].profile);
 
   },
 
-  // iconImages: {
-  //   marvel:
-  //   ['images/marvel-captain-america.png',
-  //   'images/marvel-thor.png'],
-  //   dc:
-  //   ['images/dc-batman.jpg',
-  //   'images/dc-superman.png']
-  // },
-  //
-  // characterImages: {
-  //   marvel:
-  //   ['images/character-ca.jpg',
-  //   'images/character-thor.webp'],
-  //   dc:
-  //   ['images/character-bm.jpg',
-  //   'images/character-sm.jpg']
-  // },
-
+  // randomly assigns a Marvel character to player A
   randomAssignMarvelCharacter: function() {
 
-    const lengthOfIconsPlayerA = this.onScreenCharacters['playerA'].length;
-    if (lengthOfIconsPlayerA > 1) {
-      for (let i = 0; i < lengthOfIconsPlayerA - 1; i++) {
-        this.onScreenCharacters['playerA'].pop();
+    const lengthOfArrayA = this.selectedCharacters['playerA'].length;
+    if (lengthOfArrayA > 1) {
+      for (let i = 0; i < lengthOfArrayA - 1; i++) {
+        this.selectedCharacters['playerA'].pop();
       }
     }
 
+    // stores an array of the Marvel characters' names from the characters object
     const marvelCharacters = Object.keys(this.characters.marvel);
 
+    // randomly select character from list
     const randomIndexForA = Math.floor(marvelCharacters.length * Math.random());
     const randomCharacterA = marvelCharacters[randomIndexForA];
 
-    this.onScreenCharacters['playerA'].push(this.characters.marvel[randomCharacterA].name);
-    this.onScreenCharacters['playerA'].push(this.characters.marvel[randomCharacterA].symbol);
-    this.onScreenCharacters['playerA'].push(this.characters.marvel[randomCharacterA].profile);
+    // stores randomly selected character in selected character array
+    this.selectedCharacters['playerA'].push(this.characters.marvel[randomCharacterA].name);
+    this.selectedCharacters['playerA'].push(this.characters.marvel[randomCharacterA].symbol);
+    this.selectedCharacters['playerA'].push(this.characters.marvel[randomCharacterA].profile);
   },
 
+  // randomly assigns a DC character to player B
   randomAssignDcCharacter: function() {
 
-    const lengthOfIconsPlayerB = this.onScreenCharacters['playerB'].length;
-    if (lengthOfIconsPlayerB > 1) {
-      for (let i = 0; i < lengthOfIconsPlayerB - 1; i++) {
-        this.onScreenCharacters['playerB'].pop();
+    const lengthOfArrayB = this.selectedCharacters['playerB'].length;
+    if (lengthOfArrayB > 1) {
+      for (let i = 0; i < lengthOfArrayB - 1; i++) {
+        this.selectedCharacters['playerB'].pop();
       }
     }
 
-    const marvelCharacters = Object.keys(this.characters.marvel);
+    // stores an array of the DC characters' names from the characters object
     const dcCharacters = Object.keys(this.characters.dc);
 
-
+    // randomly select character from list
     const randomIndexForB = Math.floor(dcCharacters.length * Math.random());
     const randomCharacterB = dcCharacters[randomIndexForB];
 
-
-    this.onScreenCharacters['playerB'].push(this.characters.dc[randomCharacterB].name);
-    this.onScreenCharacters['playerB'].push(this.characters.dc[randomCharacterB].symbol);
-    this.onScreenCharacters['playerB'].push(this.characters.dc[randomCharacterB].profile);
+    // stores randomly selected character in selected character array
+    this.selectedCharacters['playerB'].push(this.characters.dc[randomCharacterB].name);
+    this.selectedCharacters['playerB'].push(this.characters.dc[randomCharacterB].symbol);
+    this.selectedCharacters['playerB'].push(this.characters.dc[randomCharacterB].profile);
   },
 
+  winCombinations: [],
 
+  generateWinCombinations: function() {
 
+    this.winCombinations = [];
 
-  //   const randomIndexForA = Math.floor(this.iconImages['marvel'].length * Math.random());
-  //   const randomIndexForB = Math.floor(this.iconImages['dc'].length * Math.random());
-  //   this.icons['playerA'].push(this.iconImages['marvel'][randomIndexForA]);
-  //   this.icons['playerB'].push(this.iconImages['dc'][randomIndexForB]);
-  //   this.icons['playerA'].push(this.characterImages['marvel'][randomIndexForA]);
-  //   this.icons['playerB'].push(this.characterImages['dc'][randomIndexForB]);
-  // },
-
-  score: {
-    playerA: 0,
-    playerB: 0
-  },
-
-  resetScore: function() {
-    this.score['playerA'] = 0;
-    this.score['playerB'] = 0;
-  },
-
-  resetBoard: function() {
-    this.board = [
-    ['','',''],
-    ['','',''],
-    ['','','']
-    ];
-  },
-
-  checkWinner: function() {
-
-    // Horizontal
-
-    let n = this.gridSize;
-    let currentBoard = this.board;
+    let comboDiagonal1 = [];
+    let comboDiagonal2 = [];
+    const n = this.gridSize;
 
     for (let i = 0; i < n; i++) {
-      let counter = 1;
-      for (let j = 0; j < n - 1; j++) {
-        if (currentBoard[i][j] === currentBoard[i][j+1] && currentBoard[i][j] !== ""){
+      let comboRow = [];
+      let comboColumn = [];
+
+      comboDiagonal1.push([i,i]);
+      comboDiagonal2.push([n - 1 - i, i]);
+
+      for (let j = 0; j < n; j++) {
+        comboRow.push([i, j]);
+        comboColumn.push([j, i]);
+      }
+
+      this.winCombinations.push(comboRow);
+      this.winCombinations.push(comboColumn);
+    }
+    this.winCombinations.push(comboDiagonal1);
+    this.winCombinations.push(comboDiagonal2);
+  },
+
+  aiPlayer: "playerA",
+
+  // selectedAiCharacter: this.selectedCharacters[this.aiPlayer],
+
+  ai: function() {
+
+    let winningMove;
+
+    // Check for winning move for AI player
+    for (let combination of this.winCombinations) {
+      let counter = 0;
+
+      for (let position of combination) {
+        if (this.board[position[0]][position[1]] === ai[0]) {
           counter += 1;
-        }
-        if (counter === n) {
-          return [currentBoard[i][0],'row', i];
+        } else if (this.board[position[0]][position[1]] === "" ) {
+          winningMove = [position[0], position[1]];
+        } else {
+          break
         }
       }
-      counter = 1;
+      if (counter === this.gridSize - 1) {
+        if (winningMove) {
+          return winningMove;
+        }
+      }
     }
 
-    // Vertical
+    // Check for move to block human player winning
+    let blockingMove;
 
-    for (let i = 0; i < n; i++) {
-      let counter = 1;
-      for (let j = 0; j < n - 1; j++) {
-        if (currentBoard[j][i] === currentBoard[j+1][i] && currentBoard[j][i] !== "") {
+    for (let combination of this.winCombinations) {
+      let counter = 0;
+
+      for (let position of combination) {
+        if (this.board[position[0]][position[1]] !== ai[0] && this.board[position[0]][position[1]] !== "") {
           counter += 1;
+        } else if (this.board[position[0]][position[1]] === "" ) {
+          blockingMove = [position[0], position[1]];
+        } else {
+          break
         }
-        if (counter === n) {
-          return [currentBoard[0][i],'col', i];
+      }
+      if (counter === this.gridSize - 1) {
+        if (blockingMove) {
+          return blockingMove;
         }
       }
-      counter = 1;
     }
 
-    // Diagonals
-    let counter = 1;
+    // create a fork for the AI player (2 possible ways to win)
 
-    for (let i = 0; i < n - 1; i++) {
-      if (currentBoard[i][i] === currentBoard[i+1][i+1] && currentBoard[i][i] !== "") {
-        counter += 1;
+    let forkingMove;
+    let forkCombinations = [];
+
+    for (let combination of this.winCombinations) {
+      let countAi= 0;
+      let countEmpty = 0;
+
+      for (let position of combination) {
+        if (this.board[position[0]][position[1]] === ai[0]) {
+          countAi += 1;
+        } else if (this.board[position[0]][position[1]] === "") {
+          countEmpty += 1;
+        }
+        if (countAi === 1 && countEmpty === 2) {
+          forkCombinations.push(position);
+        }
       }
-      if (counter === n) {
-        return [currentBoard[0][0],'diagonal', 1]
+      if (forkCombinations.length > 1) {
+        const result = forkCombinations.filter(cell => cell === ai[0])
+        return result[0];
       }
     }
 
-    counter =  1;
+    // let forkingMove;
+    // let forkCombinations = [];
+    //
+    // for (let combination of this.winCombinations) {
+    //   let countAi= 0;
+    //   let countEmpty = 0;
+    //
+    //   for (let position of combination) {
+    //     if (this.board[position[0]][position[1]] === ai[0]) {
+    //       countAi += 1;
+    //     } else if (this.board[position[0]][position[1]] === "") {
+    //       countEmpty += 1;
+    //     }
+    //     if (countAi === 1 && countEmpty === 2) {
+    //       forkCombinations.push(position);
+    //     }
+    //   }
+    //   if (forkCombinations.length > 1) {
+    //     const result = forkCombinations.filter(cell => cell === ai[0])
+    //     return result[0];
+    //   }
+    // }
 
-    for (let i = 0; i < n - 1; i++) {
-      if ((currentBoard[i][n - 1 - i] === currentBoard[i+1][n - 2 - i]) && currentBoard[i][n - 1 - i] !== "") {
-        counter += 1;
-        console.log(counter);
-      }
-      if (counter === n) {
-        return [currentBoard[0][n-1], 'diagonal', 2]
-      }
-    }
-
-      return '';
   }
-
-  //   const cB = this.board;
-  //
-  //   for (let i = 0; i < 3; i++) {
-  //     // checks each row
-  //     if (cB[i][0] !== '' && cB[i][0] === cB[i][1] && cB[i][1] === cB[i][2]) {
-  //       return [cB[i][0],'row', i];
-  //     }
-  //   }
-  //
-  //   // checks each column
-  //   for (let i = 0; i < 3; i++) {
-  //     if (cB[0][i] !== '' && cB[0][i] === cB[1][i] && cB[1][i] === cB[2][i]) {
-  //       return [cB[0][i], 'col', i];
-  //     }
-  //   }
-  //
-  //   // checks the diagonals
-  //   if ((cB[0][0] !== '' && cB[0][0] === cB[1][1] && cB[1][1] === cB[2][2])) {
-  //     return [cB[0][0], 'diagonal', 1];
-  //   } else if ((cB[0][2] !== '' && cB[0][2] === cB[1][1] && cB[1][1] === cB[2][0])) {
-  //     return [cB[0][2], 'diagonal', 2];
-  //   }
-  //
-  //   return '';
-  // }
 };

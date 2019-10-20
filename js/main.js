@@ -1,13 +1,14 @@
-
-
+// This js file deals with all the DOM manipulation
 
 $(document).ready(function() {
 
   // construct game board (grid)
 
-  // stores the current size from the tictactoe object
+  // stores the game board size
+  // note: in this case, the game board will be 3 x 3
   const n = tictactoe.gridSize;
 
+  // classes row, col, diagonal1 and diagonal2 are added to each 'cell' to enable the highlighting the winning combination once there is 3 of same item in a row
   let gameBoard = '';
   for (let i = 0; i < n; i++) {
     gameBoard += "<tr>";
@@ -15,10 +16,10 @@ $(document).ready(function() {
       gameBoard += "<td id='c" + i.toString() + j.toString() + "' class='cell row" + i.toString() + " col" + j.toString();
 
       if (i === j) {
-        gameBoard += " diagonal1";
+        gameBoard += " diagonal1" + "diagonal='1'";
       }
       if (j === n - 1 - i) {
-        gameBoard +=" diagonal2";
+        gameBoard +=" diagonal2" + "diagonal='2'";
       }
       gameBoard += "' row=" + i.toString() + " col=" + j.toString() + "></td>";
     }
@@ -27,9 +28,11 @@ $(document).ready(function() {
 
   $('#game-board table').append(gameBoard);
 
-  // construct the Marvel character board
+  // construct Marvel and DC character boards for players to select
 
   tictactoe.createCharacterBoard();
+
+  // construct the Marvel character board in rows of 3
 
   const marvelCharacterList = Object.keys(tictactoe.marvelBoard);
   let marvelCharacterBoard = "<tr>";
@@ -42,6 +45,7 @@ $(document).ready(function() {
       }
     }
 
+  // construct the Marvel character board in rows of 3
   let marvelCharacterBoardToAppend = '';
   if (marvelCharacterList.length % 3 === 0) {
     marvelCharacterBoardToAppend = marvelCharacterBoard.substring(0, marvelCharacterBoard.length - 4);
@@ -57,12 +61,15 @@ $(document).ready(function() {
   let dcCharacterBoard = "<tr>";
 
   for (let j = 0; j < dcCharacterList.length; j++) {
+
     const key = dcCharacterList[j];
     dcCharacterBoard += "<td id=" + key + " class='character-icons'><img src=" + tictactoe.dcBoard[key] + "></td>";
     if ((j + 1) % 3 === 0) {
       dcCharacterBoard += "</tr><tr>"
       }
     }
+
+  // construct the DC character board in rows of 3
 
   let dcCharacterBoardToAppend = '';
   if (dcCharacterList.length % 3 === 0) {
@@ -73,27 +80,38 @@ $(document).ready(function() {
 
   $('.dc-board table').append(dcCharacterBoardToAppend);
 
-  // refers to the cells in the game board
-
+  // refers to the cells on the game board
   let $boardCell = $('#game-board table tr td');
 
   const resetGame = function() {
-    tictactoe.resetBoard();
-    tictactoe.moves = 0;
-    $boardCell.each(function() {
+    tictactoe.constructBoard();
+    tictactoe.moves = 0; // resets the number of moves made on the board to zero
+    $boardCell.each(function() { //TODO: check if setting text to empty actually removes the icons
       $(this).text('');
     });
+
+    // resets the board cells to their default settings
     $boardCell.removeClass('clicked');
-    $boardCell.removeClass('no-hover');
+    $boardCell.removeClass('no-events');
     $boardCell.removeAttr('style');
+
+    // reset the message pop-up box to contain nothing
     $('#message').text("");
     $('#message').css('display', 'none');
-    $('.char-img img').css('opacity','1');
-    $('.char-img img').css('opacity','1');
+
+    // display character images
+    $('#player-a-score .char-img img').css('opacity','1');
+    $('#player-b-score .char-img img').css('opacity','1');
+
+    // removes any messages that shows the winner from previous game
     $('.winner-message-dc').remove();
     $('.winner-message-marvel').remove();
+
+    // randomly select Player A or B to start the game
     tictactoe.startsGame();
     // $('.score p').remove();
+
+    // adds CSS style for Player A and Player B on hover
     $boardCell.hover(function() {
       if (tictactoe.turn === 0) {
         $(this).removeClass('playerB');
@@ -108,35 +126,54 @@ $(document).ready(function() {
     );
   };
 
+  // resets the game upon loading of document
   resetGame();
-  $('#reset-game').addClass('no-hover');
-  $('#reset-score').addClass('no-hover');
+
+  // rematch buttons and new game button disabled upon document load
+  $('#rematch').addClass('no-events');
+  $('#new-game').addClass('no-events');
+
+  // randomly selects who starts game
   tictactoe.startsGame();
+
+  // randomly selects characters for Player A and B to be placed on screen
   tictactoe.randomAssignMarvelCharacter();
   tictactoe.randomAssignDcCharacter();
 
-  // set characters on characters onto the screen
-  let setCharactersOnScreen = function() {
-    characterA = tictactoe.onScreenCharacters['playerA'][3];
-    characterB = tictactoe.onScreenCharacters['playerB'][3];
-    $('#player-a-score .char-img').prepend("<img src='" + characterA + "' class='cover'>");
-    $('#player-b-score .char-img').prepend("<img src='" + characterB + "' class='cover'>");
-    const marvelCharacterName = tictactoe.onScreenCharacters['playerA'][1];
-    $('#marvel-name').text(marvelCharacterName);
-    const dcCharacterName = tictactoe.onScreenCharacters['playerB'][1];
-    $('#dc-name').text(dcCharacterName);
-    // if (tictactoe.turn === 0) {
-    //   $('#player-a-score .char-img img').css('border', '2px solid red');
-    //   $('#player-b-score .char-img img').css('border', '2px solid rgba(0,0,255,0.1)');
-    // } else if (tictactoe.turn === 1) {
-    //   $('#player-b-score .char-img img').css('border', '2px solid blue');
-    //   $('#player-a-score .char-img img').css('border', '2px solid rgba(255,0,0,0.1)');
-    // }
+  // set characters onto the screen
+
+  let setCharactersOnScreen = function(player) {
+
+    if (player === "playerA") {
+
+      // store the links to the profile picture of the character
+      const characterA = tictactoe.selectedCharacters['playerA'][3];
+
+      // place character profile pictures onto screen
+      $('#player-a-score .char-img').prepend("<img src='" + characterA + "' class='cover'>");
+
+      // store the name of Marvel character and place it on screen
+      const marvelCharacterName = tictactoe.selectedCharacters['playerA'][1];
+      $('#marvel-name').text(marvelCharacterName);
+    } else if (player === "playerB") {
+
+      const characterB = tictactoe.selectedCharacters['playerB'][3];
+      $('#player-b-score .char-img').prepend("<img src='" + characterB + "' class='cover'>");
+
+      // store the name of the DC character and place it on screen
+      const dcCharacterName = tictactoe.selectedCharacters['playerB'][1];
+      $('#dc-name').text(dcCharacterName);
+    }
   };
 
-  setCharactersOnScreen();
+  // set random characters on screen upon document load
+  setCharactersOnScreen("playerA");
+  setCharactersOnScreen("playerB");
 
+  // this function highlights the 3 cells that contain the winning combination
+  // this function works in conjunction with the tictactoe method to check for a winner
   const highlightWinningCells = function(array) {
+
     let winningCellCss = {};
     if (array[0] === 'x') {
       winningCellCss = {'background-color':'red','border': '1px solid', 'border-image':'conic-gradient(red, yellow, lime, aqua, blue, magenta, red) 1'};
@@ -176,145 +213,144 @@ $(document).ready(function() {
     }
   };
 
-  let stopClick = function() {
-    $boardCell.addClass('no-hover');
+  // function to stop hovering and clicking on cells on game board
+  const stopEventsOnBoardCell = function() {
+    $boardCell.addClass('no-events');
   };
 
-  let stopHover = function() {
-    $boardCell.addClass('no-hover');
-  };
-
-
-    // let bgColor = '';
-    // if (array[0] === 'x') {
-    //   bgColor = "'background-color':'red'";
-    // } else if (array[0] === 'o') {
-    //   bgColor = "'background-color':'blue'";
-    // }
-    //
-    // if (array[1] === 'row') {
-    //   const rowNo = array[2].toString();
-    //   $boardCell.each(function() {
-    //     if ($(this).hasClass('row' + rowNo)) {
-    //       $(this).css({bgColor, 'border': '3px solid', 'border-image':'conic-gradient(red, yellow, lime, aqua, blue, magenta, red) 1'});
-    //     } else if (array[1] === 'col') {
-    //       const colNo = array[2].toString();
-    //       if ($(this).hasClass('col' + colNo)) {
-    //         $(this).css({bgColor, 'border': '3px solid', 'border-image':'conic-gradient(red, yellow, lime, aqua, blue, magenta, red) 1'});
-    //       }
-    //     } else if (array[1] === 'diagonal') {
-    //       if (array[2] === 1) {
-    //         if ($(this).hasClass('diagonal1')) {
-    //           $(this).css({bgColor, 'border': '3px solid', 'border-image':'conic-gradient(red, yellow, lime, aqua, blue, magenta, red) 1'});
-    //         } else if (array[2] === 2) {
-    //           if ($(this).hasClass('diagonal2')) {
-    //           $(this).css({bgColor, 'border': '3px solid', 'border-image':'conic-gradient(red, yellow, lime, aqua, blue, magenta, red) 1'});
-    //           }
-    //         }
-    //       }
-    //     }
-    //   });
-    // }
-
-
-  // selection of characters
-
+  // function to display message
+  // could also use show()
   const showMessage = function() {
     $('#message').css('display','block');
   }
 
+  // function to hide message
+  // could also use hide()
   const hideMessage = function() {
     $('#message').css('display','none');
   }
 
+  // TODO: if incorporating AI, need to change first display message
   $('#message').text("Marvel, choose your hero.");
   showMessage();
+
+  // cell on Marvel character board
 
   let $marvelIcon = $('.marvel-board table tr td');
 
   $marvelIcon.on('click', function() {
+
     const $this = $(this);
-    $this.addClass('selected');
-    let characterKey = $(this).attr('id');
+    // $this.addClass('selected'); // TODO: check this. don't think this is needed.
+    let characterKey = $(this).attr('id'); // retrieves the id of the clicked character i.e. the character's name
+
+    // clicked Marvel character is stored as Player A
     tictactoe.selectMarvelCharacter(characterKey);
 
-    const marvelCharacterName = tictactoe.onScreenCharacters['playerA'][1];
+    // displays Marvel character's name on screen
+    const marvelCharacterName = tictactoe.selectedCharacters['playerA'][1];
     $('#marvel-name').text(marvelCharacterName)
-    $('#player-a-score .char-img img').remove();
-    characterA = tictactoe.onScreenCharacters['playerA'][3];
-    $('#player-a-score .char-img').prepend("<img src='" + characterA + "' class='cover'>");
-      // if (tictactoe.turn === 0) {
-      //   $('#player-a-score .char-img img').css('border', '2px solid red');
-      // } else if (tictactoe.turn === 1) {
-      //   $('#player-a-score .char-img img').css('border', '2px solid rgba(255,0,0,0.1)');
-      // }
-    }
 
-  );
+    // removes image of current character on screen
+    $('#player-a-score .char-img img').remove();
+
+    // displays clicked character on screen
+    characterA = tictactoe.selectedCharacters['playerA'][3];
+    $('#player-a-score .char-img').prepend("<img src='" + characterA + "' class='cover'>");
+
+  });
+
+  // cell on DC character board
 
   let $dcIcon = $('.dc-board table tr td');
 
   $dcIcon.on('click', function() {
+
     const $this = $(this);
-    $this.addClass('selected');
-    let characterKey = $(this).attr('id');
+    // $this.addClass('selected'); // TODO: check this. don't think this is needed.
+    let characterKey = $(this).attr('id');// retrieves the id of the clicked character i.e. the character's name
+
+    // selected DC character's name on screen
     tictactoe.selectDcCharacter(characterKey);
-    const dcCharacterName = tictactoe.onScreenCharacters['playerB'][1];
+
+    // displays DC character's name on screen
+    const dcCharacterName = tictactoe.selectedCharacters['playerB'][1];
     $('#dc-name').text(dcCharacterName);
+
+    // removes image of current character on screen
     $('#player-b-score .char-img img').remove();
-    characterB = tictactoe.onScreenCharacters['playerB'][3];
+
+    // displays selected character on screen
+    characterB = tictactoe.selectedCharacters['playerB'][3];
     $('#player-b-score .char-img').prepend("<img src='" + characterB + "' class='cover'>");
-      // if (tictactoe.turn === 0) {
-      //   $('#player-b-score .char-img img').css('border', '2px solid rgba(0,0,255,0.1)');
-      // } else if (tictactoe.turn === 1) {
-      //   $('#player-b-score .char-img img').css('border', '2px solid blue');
-      // }
-    });
+  });
 
-  $dcIcon.addClass('no-hover');
+  // cannot select DC characters until Player A has chosen a Marvel character
+  $dcIcon.addClass('no-events');
+
+  // dims DC character board and prevent from clicking until Marvel character has been selected
+  $boardCell.addClass('no-events');
   $dcIcon.css('opacity', '0.5');
-  $boardCell.addClass('no-hover');
 
-  let $cmc = $('#confirmation-marvel-character');
+  // Character Selection Buttons
+
+  let $cmc = $('#confirmation-marvel-character'); // confirmation button for Marvel character selection
+  let $cdc = $('#confirmation-dc-character'); // confirmation button for DC character selection
+  let $rmc = $('#random-marvel-character'); //random selection button for Marvel character
+  let $rdc = $('#random-dc-character'); // random selection button for DC character
 
   $cmc.on('click', function() {
-    // if (!$marvelIcon.hasClass("selected")) {
-    //   $('#message').addClass('infinite animated pulse');
-    //   $('#message').text('You must select a hero.');
-    //   setTimeout(showMessage(), 5000);
-    //   return;
-    // }
-    $('#message').css('display', 'none');
-    $marvelIcon.addClass('no-hover');
+
+    // $('#message').css('display', 'none'); // TODO: check if this is redundant
+
+    // once character is confirmed, Marvel character board is disabled
+    $marvelIcon.addClass('no-events');
     $marvelIcon.css('opacity', '0.5');
-    $dcIcon.removeClass('no-hover');
-    $dcIcon.css('opacity', '');
-    $cdc.removeClass('no-hover');
-    $('#random-marvel-character').removeClass('no-hover');
+
+    // once Player A has confirmed Marvel character, confirmation button and random selection button disabled
+    $cmc.addClass('no-events');
+    $rmc.addClass('no-events');
+
+    // turn on DC character board and selection buttons
+    $dcIcon.removeClass('no-events');
+    $dcIcon.css('opacity', '1');
+    $cdc.removeClass('no-events');
+    $rdc.removeClass('no-events');
+
+    // prompt Player B to select DC character
     $('#message').text("DC, choose your hero.");
     showMessage();
-    $cmc.addClass('no-hover');
-    $('#random-marvel-character').addClass('no-hover');
   });
-
-  let $cdc = $('#confirmation-dc-character');
 
   $cdc.on('click', function() {
-    // if (!$dcIcon.hasClass("selected")) {
-    //   $('#message').addClass('infinite animated pulse');
-    //   $('#message').text('You must select a hero.');
-    //   setTimeout(showMessage(), 5000);
-    //   return;
-    // }
-    hideMessage();
+
+    // hideMessage(); // TODO: check if this is redundant
+
+    // show message after DC character is chosen
     $('#message').text("Let's play!");
     showMessage();
+
+    // hide message after 2 seconds
     setTimeout(function() {
       hideMessage();
     }, 2000);
+
+    // once character is confirmed, DC character board is disabled
+    $dcIcon.addClass('no-events');
     $dcIcon.css('opacity', '0.5');
-    $dcIcon.addClass('no-hover');
-    $boardCell.removeClass('no-hover');
+
+    // disable DC character selection buttons after DC character is confirmed
+    $cdc.addClass('no-events');
+    $rdc.addClass('no-events');
+
+    // set both players' scores to 0
+    $('#player-a-score p').text(0);
+    $('#player-b-score p').text(0);
+
+    // once both characters have been selected, the game board cells become active
+    $boardCell.removeClass('no-events');
+
+    // border to show which player's turn it is
     if (tictactoe.turn === 0) {
       $('#player-a-score .char-img img').css('border', '2px solid red');
       $('#player-b-score .char-img img').css('border', '2px solid rgba(0,0,255,0.1)');
@@ -323,48 +359,71 @@ $(document).ready(function() {
       $('#player-a-score .char-img img').css('border', '2px solid rgba(255,0,0,0.1)');
     }
 
-    $('#player-a-score p').text(0);
-    $('#player-b-score p').text(0);
-    $cdc.addClass('no-hover');
-    $('#random-dc-character').addClass('no-hover');
-    $('#reset-game').removeClass('no-hover');
-    $('#reset-score').removeClass('no-hover');
+    // enable rematch
+    $('#rematch').removeClass('no-events');
+    $('#new-game').removeClass('no-events');
   });
 
-  $('#random-marvel-character').on('click', function() {
+  // randomly select Marvel character for Player A
+
+  $rmc.on('click', function() {
 
     tictactoe.randomAssignMarvelCharacter();
+
+    // removes previous images of character on screen and sets the randomly selected new one
     $('#player-a-score .char-img img').remove();
-    $('#player-b-score .char-img img').remove();
+    setCharactersOnScreen("playerA");
+
+    // disable Marvel character selection board
+    $marvelIcon.addClass('no-events');
     $marvelIcon.css('opacity','0.5');
+
+    // disable Marvel selection buttons
+    $cmc.addClass('no-events');
+    $rmc.addClass('no-events');
+
+    // turn on DC character board and selection buttons
     $dcIcon.css('opacity','1');
-    $('#random-marvel-character').add('no-hover');
-    $marvelIcon.addClass('no-hover');
-    $dcIcon.removeClass('no-hover');
-    $cdc.removeClass('no-hover');
-    setCharactersOnScreen();
+    $dcIcon.removeClass('no-events');
+    $cdc.removeClass('no-events');
+    $rdc.removeClass('no-events');
+
+    // prompt Player B to select DC character
     $('#message').text("DC, choose your hero.");
-    $('#random-marvel-character').addClass('no-hover');
-    $('#random-dc-character').removeClass('no-hover');
+
   });
 
-  $('#random-dc-character').on('click', function() {
+  $rdc.on('click', function() {
 
     tictactoe.randomAssignDcCharacter();
-    $('#player-a-score .char-img img').remove();
+
+    // removes previous images of character on screen and sets the randomly selected new one
     $('#player-b-score .char-img img').remove();
-    setCharactersOnScreen();
+    setCharactersOnScreen("playerB");
+
+    // show message after DC character is chosen
     $('#message').text("Let's play!");
     showMessage();
+
+    // hides message after 2 seconds
     setTimeout(function() {
       hideMessage();
     }, 2000);
+
+    // disable DC character selection board and buttons
     $dcIcon.css('opacity','0.5');
-    $dcIcon.addClass('no-hover');
-    $('#random-dc-character').addClass('no-hover');
+    $dcIcon.addClass('no-events');
+    $cdc.addClass('no-events');
+    $rdc.addClass('no-events');
+
+    // set scores to 0
     $('#player-a-score p').text(0);
     $('#player-b-score p').text(0);
-    $boardCell.removeClass('no-hover');
+
+    // once both characters have been selected, the game board cells become active
+    $boardCell.removeClass('no-events');
+
+    // border to show which player's turn it is
     if (tictactoe.turn === 0) {
       $('#player-a-score .char-img img').css('border', '2px solid red');
       $('#player-b-score .char-img img').css('border', '2px solid rgba(0,0,255,0.1)');
@@ -372,32 +431,39 @@ $(document).ready(function() {
       $('#player-b-score .char-img img').css('border', '2px solid blue');
       $('#player-a-score .char-img img').css('border', '2px solid rgba(255,0,0,0.1)');
     }
-    $('#reset-game').removeClass('no-hover');
-    $('#reset-score').removeClass('no-hover');
+
+    // enable rematch and new game
+    $('#rematch').removeClass('no-events');
+    $('#new-game').removeClass('no-events');
 
   });
 
   $boardCell.on('click', function() {
 
     const $this = $(this);
+
+    // cannot click on any game board cell that already has a token
     if ($this.hasClass('clicked')) {
       return false;
     }
 
-    let iconToInput = "";
-    let iconToScreen = "";
+    let tokenInArray = "";
+    let tokenToScreen = "";
+
     if (tictactoe.turn === 0) {
-      iconInBackend = tictactoe.onScreenCharacters['playerA'][0];
-      iconOnScreen = tictactoe.onScreenCharacters['playerA'][2];
+      tokenInArray = tictactoe.selectedCharacters['playerA'][0];
+      tokenOnScreen = tictactoe.selectedCharacters['playerA'][2];
     } else if (tictactoe.turn === 1) {
-      iconInBackend = tictactoe.onScreenCharacters['playerB'][0];
-      iconOnScreen = tictactoe.onScreenCharacters['playerB'][2];
+      tokenInArray = tictactoe.selectedCharacters['playerB'][0];
+      tokenOnScreen = tictactoe.selectedCharacters['playerB'][2];
     }
+
     const i = $this.attr('row');
     const j = $this.attr('col');
+
     if (tictactoe.board[i][j] === "") {
-      tictactoe.board[i][j] = iconInBackend;
-      $this.append('<img src=' + iconOnScreen + '>');
+      tictactoe.board[i][j] = tokenInArray;
+      $this.append('<img src=' + tokenOnScreen + '>');
       $this.addClass('clicked');
       $this.css('box-shadow', '1px 1px 1px 1px black');
       tictactoe.moves += 1;
@@ -407,130 +473,135 @@ $(document).ready(function() {
     let result = tictactoe.checkWinner();
 
     if (result[0] === "x") {
+
       tictactoe.score['playerA'] += 1;
       const score = tictactoe.score['playerA'];
       $('#player-a-score p').text(score);
+
       $('#character-box-a').append('<p class="winner-message-marvel infinite animated pulse">MARVEL WINS</p>');
       $('#message').text("");
       $('#message').append("<div class='pop-up-buttons'></div>");
-      $('#message div').append("<button id='reset-game-pop-up'>Play Again</button>");
-      $('#message div').append("<button id='reset-score-pop-up'>Reset Score</button>");
+      $('#message div').append("<button id='rematch-pop-up'>Play Again</button>");
       showMessage();
-      // $('#message').html('<p>Marvel wins!</p>');
-      stopClick();
+
       $('#player-a-score .char-img img').css('border', '2px solid red');
       $('#player-b-score .char-img img').css('opacity', '0.5');
-      stopHover();
+
+      stopEventsOnBoardCell();
       highlightWinningCells(result);
       return;
+
     } else if (result[0] === "o") {
+
       tictactoe.score['playerB'] += 1;
       const score = tictactoe.score['playerB'];
       $('#player-b-score p').text(score);
+
       $('#character-box-b').append('<p class="winner-message-dc infinite animated pulse">DC WINS</p>');
       $('#message').text("");
       $('#message').append("<div class='pop-up-buttons'></div>");
-      $('#message div').append("<button id='reset-game-pop-up'>Play Again</button>");
-      $('#message div').append("<button id='reset-score-pop-up'>Reset Score</button>");
+      $('#message div').append("<button id='rematch-pop-up'>Play Again</button>");
       showMessage();
-      // $('#message').html('<p>DC wins!</p>');
-      stopClick();
+
       $('#player-a-score .char-img img').css('opacity', '0.5');
       $('#player-b-score .char-img img').css('border', '2px solid blue');
-      stopHover();
+
+      stopEventsOnBoardCell();
       highlightWinningCells(result);
       return;
+
     } else if ((tictactoe.moves === 9 && result[0] !== "o" && result[0] !== "x") ) {
+
       $('#message').text('It\'s a draw!');
       $('#message').append("<div class='pop-up-buttons'></div>");
-      $('#message div').append("<button id='reset-game-pop-up'>Play Again</button>");
-      $('#message div').append("<button id='reset-score-pop-up'>Reset Score</button>");
-      $('#message').css('display','block');
+      $('#message div').append("<button id='rematch-pop-up'>Play Again</button>");
+      showMessage();
+
       $('#player-a-score .char-img img').css('border', '2px solid rgba(255,0,0,0.1)');
       $('#player-b-score .char-img img').css('border', '2px solid rgba(0,0,255,0.1)');
       $('#player-a-score .char-img img').css('opacity', '0.5');
       $('#player-b-score .char-img img').css('opacity', '0.5');
-      $this.off('hover');
+
+      stopEventsOnBoardCell();
       highlightWinningCells(result);
       return;
     };
 
     if (tictactoe.turn === 0) {
+
       tictactoe.turn = 1;
       $('#player-b-score .char-img img').css('border', '2px solid blue');
       $('#player-a-score .char-img img').css('border', '2px solid rgba(255,0,0,0.1)');
+
     } else if (tictactoe.turn === 1) {
+
       tictactoe.turn = 0;
       $('#player-a-score .char-img img').css('border', '2px solid red');
       $('#player-b-score .char-img img').css('border', '2px solid rgba(0,0,255,0.1)');
-    }
 
+    }
   });
 
-  $('#reset-game').on('click', function() {
+  $('#rematch').on('click', function() {
     resetGame();
   });
 
-  $(document).on('click', '#reset-game-pop-up', function(event) {
+  $(document).on('click', '#rematch-pop-up', function(event) {
     resetGame();
     hideMessage();
   });
-  // $('#reset-game-pop-up').on('click', function() {
-  //   resetGame();
-  //   hideMessage();
-  // });
 
-  const resetScore = function() {
+  const newGame = function() {
     tictactoe.resetScore(); // resets the score in the tic tac toe object so that both players have 0
     $('#player-a-score p.current-score').text('0');
     $('#player-b-score p.current-score').text('0');
+
     resetGame();
     $('#player-a-score .char-img img').remove();
     $('#player-b-score .char-img img').remove();
-    // $boardCell.removeClass('no-hover');
-    // $boardCell.removeClass('clicked');
-    $boardCell.addClass('no-hover');
-    $cmc.removeClass('no-hover');
-    $('#random-marvel-character').removeClass('no-hover');
+
+    // disable game board
+    $boardCell.addClass('no-events');
+
+    // enable Marvel character selection board and buttons
+    $cmc.removeClass('no-events');
+    $rmc.removeClass('no-events');
     $marvelIcon.css('opacity', '1');
-    $marvelIcon.removeClass('no-hover');
-    $dcIcon.addClass('no-hover');
-    $cdc.addClass('no-hover');
-    $('#random-dc-character').addClass('no-hover');
-    // $cdc.removeClass('no-hover');
-    $('#random-marvel-character').removeClass('no-hover');
-    // $('#random-dc-character').removeClass('no-hover');
-    $("#message").text("Marvel, select your hero.");
-    $('#reset-game').addClass('no-hover');
+    $marvelIcon.removeClass('no-events');
+
+    // disable DC character selection board and buttons
+    $dcIcon.addClass('no-events');
+    $cdc.addClass('no-events');
+    $rdc.addClass('no-events');
+
+    // disables rematch button
+    $('#rematch').addClass('no-events');
+
+    // determines who starts the game
     tictactoe.startsGame();
+
+    // randomly place characters on screen
     tictactoe.randomAssignMarvelCharacter();
     tictactoe.randomAssignDcCharacter();
-    setCharactersOnScreen();
+    setCharactersOnScreen("playerA");
+    setCharactersOnScreen("playerB");
+
+    $('#player-b-score .char-img img').css('opacity', '0.5');
+
+    // prompt Player A to select character
+    $("#message").text("Marvel, select your hero.");
     showMessage();
   };
 
-  $('#reset-score').on('click', function() {
-    resetScore();
+  $('#new-game').on('click', function() {
+    newGame();
   });
 
-  $(document).on('click', '#reset-score-pop-up', function(event) {
-    resetScore();
+  $(document).on('click', '#new-game-pop-up', function(event) {
+    newGame();
   });
-  // $('#reset-score-pop-up').on('click', function() {
-  //   resetScore();
+  // $('#new-game-pop-up').on('click', function() {
+  //   newGame();
   //   hideMessage();
   // });
 });
-
-
-
-// const createBoard = function() {
-//   let table = '';
-//   for (let i = 0; i < 4; i++) {
-//     $('<tr>').append('.table');
-//     for (let j = 0; j < 4; j++) {
-//       $('<td>').attr('id',`cell-${ i }${ j }`).append('tr');
-//     }
-//   };
-//
-// };
