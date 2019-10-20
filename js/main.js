@@ -111,6 +111,24 @@ $(document).ready(function() {
     tictactoe.startsGame();
     // $('.score p').remove();
 
+    if (tictactoe.turn === 0) {
+
+      $('#player-b-score .char-img img').css('border', '2px solid blue');
+      $('#player-a-score .char-img img').css('border', '2px solid rgba(255,0,0,0.1)');
+
+    } else if (tictactoe.turn === 1) {
+
+      $('#player-a-score .char-img img').css('border', '2px solid red');
+      $('#player-b-score .char-img img').css('border', '2px solid rgba(0,0,255,0.1)');
+
+    }
+
+    // disable rematch and new game buttons
+    $('#rematch').addClass('no-events');
+    $('#rematch').css('opacity', '0.5');
+    $('#new-game').addClass('no-events');
+    $('#new-game').css('opacity', '0.5');
+
     // adds CSS style for Player A and Player B on hover
     $boardCell.hover(function() {
       if (tictactoe.turn === 0) {
@@ -309,13 +327,17 @@ $(document).ready(function() {
 
     // once Player A has confirmed Marvel character, confirmation button and random selection button disabled
     $cmc.addClass('no-events');
+    $cmc.css('opacity', '0.5');
     $rmc.addClass('no-events');
+    $rmc.css('opacity', '0.5');
 
     // turn on DC character board and selection buttons
     $dcIcon.removeClass('no-events');
     $dcIcon.css('opacity', '1');
     $cdc.removeClass('no-events');
+    $cdc.css('opacity', '1');
     $rdc.removeClass('no-events');
+    $rdc.css('opacity', '1');
 
     // prompt Player B to select DC character
     $('#message').text("DC, choose your hero.");
@@ -333,7 +355,7 @@ $(document).ready(function() {
     // hide message after 2 seconds
     setTimeout(function() {
       hideMessage();
-    }, 2000);
+    }, 1000);
 
     // once character is confirmed, DC character board is disabled
     $dcIcon.addClass('no-events');
@@ -341,7 +363,9 @@ $(document).ready(function() {
 
     // disable DC character selection buttons after DC character is confirmed
     $cdc.addClass('no-events');
+    $cdc.css('opacity', '0.5');
     $rdc.addClass('no-events');
+    $rdc.css('opacity', '0.5');
 
     // set both players' scores to 0
     $('#player-a-score p').text(0);
@@ -361,7 +385,10 @@ $(document).ready(function() {
 
     // enable rematch
     $('#rematch').removeClass('no-events');
+    $('#rematch').css('opacity', '1');
     $('#new-game').removeClass('no-events');
+    $('#new-game').css('opacity', '1');
+
   });
 
   // randomly select Marvel character for Player A
@@ -380,13 +407,17 @@ $(document).ready(function() {
 
     // disable Marvel selection buttons
     $cmc.addClass('no-events');
+    $cmc.css('opacity', '0.5');
     $rmc.addClass('no-events');
+    $rmc.css('opacity', '0.5');
 
     // turn on DC character board and selection buttons
     $dcIcon.css('opacity','1');
     $dcIcon.removeClass('no-events');
     $cdc.removeClass('no-events');
+    $cdc.css('opacity','1');
     $rdc.removeClass('no-events');
+    $rdc.css('opacity','1');
 
     // prompt Player B to select DC character
     $('#message').text("DC, choose your hero.");
@@ -408,13 +439,15 @@ $(document).ready(function() {
     // hides message after 2 seconds
     setTimeout(function() {
       hideMessage();
-    }, 2000);
+    }, 1000);
 
     // disable DC character selection board and buttons
     $dcIcon.css('opacity','0.5');
     $dcIcon.addClass('no-events');
     $cdc.addClass('no-events');
+    $cdc.css('opacity', '0.5');
     $rdc.addClass('no-events');
+    $rdc.css('opacity', '0.5');
 
     // set scores to 0
     $('#player-a-score p').text(0);
@@ -434,7 +467,9 @@ $(document).ready(function() {
 
     // enable rematch and new game
     $('#rematch').removeClass('no-events');
+    $('#rematch').css('opacity', '1');
     $('#new-game').removeClass('no-events');
+    $('#new-game').css('opacity', '1');
 
   });
 
@@ -565,17 +600,24 @@ $(document).ready(function() {
 
     // enable Marvel character selection board and buttons
     $cmc.removeClass('no-events');
+    $cmc.css('opacity', '1');
     $rmc.removeClass('no-events');
+    $rmc.css('opacity', '1');
     $marvelIcon.css('opacity', '1');
     $marvelIcon.removeClass('no-events');
 
     // disable DC character selection board and buttons
     $dcIcon.addClass('no-events');
     $cdc.addClass('no-events');
+    $cdc.css('opacity', '0.5');
     $rdc.addClass('no-events');
+    $rdc.css('opacity', '0.5');
 
-    // disables rematch button
+    // disables rematch and new game button
     $('#rematch').addClass('no-events');
+    $('#rematch').css('opacity', '0.5');
+    $('#new-game').addClass('no-events');
+    $('#new-game').css('opacity', '0.5');
 
     // determines who starts the game
     tictactoe.startsGame();
