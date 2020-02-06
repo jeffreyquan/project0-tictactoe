@@ -6,7 +6,7 @@ Feel free to test out my project [here](https://jeffreyquan.github.io/project0-t
 
 ### Motivation
 
-The aim for this project was to deliver a working 2-player Tic Tac Toe game that could be hosted online with the following requirements:
+The aim of this project was to deliver a working 2-player Tic Tac Toe game that could be hosted online with the following requirements:
 
 * render a game board in the browser
 * switch turns between X and O
@@ -23,8 +23,8 @@ This was my first project at General Assembly's Software Engineering Immersive c
 
 ### Key Features
 
-* **Character selection**: being able to select Marvel and DC characters using a selection panel. One player chooses a Marvel character and the other must choose a DC character.
-* **Unique symbols**: symbols unique to the characters themselves, instead of X and O. So, you'll see Captain America's famous shield and the Superman logo.
+* **Character selection** - being able to select Marvel and DC characters using a selection panel. One player chooses a Marvel character and the other must choose a DC character.
+* **Unique symbols** - symbols unique to the characters themselves, instead of X and O. So, you'll see Captain America's famous shield and the Superman logo.
 
 See the further development section below of additional features I will be adding.
 
@@ -35,5 +35,5 @@ See the further development section below of additional features I will be addin
 
 ### Further Development
 I'm aiming to add the following features to the game:
-* **AI:** adding a one-player mode where the user can play against an AI.
-* **Mobile Responsive**: updating the interface to be able to play on mobile devices.
+* **AI** - adding a one-player mode where the user can play against an AI.
+* **Mobile Responsive** - updating the interface to be able to play on mobile devices.
