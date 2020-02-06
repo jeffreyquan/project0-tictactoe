@@ -123,12 +123,6 @@ $(document).ready(function() {
 
     }
 
-    // disable rematch and new game buttons
-    $('#rematch').addClass('no-events');
-    $('#rematch').css('opacity', '0.5');
-    $('#new-game').addClass('no-events');
-    $('#new-game').css('opacity', '0.5');
-
     // adds CSS style for Player A and Player B on hover
     $boardCell.hover(function() {
       if (tictactoe.turn === 0) {
