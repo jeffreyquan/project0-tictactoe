@@ -86,7 +86,7 @@ $(document).ready(function() {
   const resetGame = function() {
     tictactoe.constructBoard();
     tictactoe.moves = 0; // resets the number of moves made on the board to zero
-    $boardCell.each(function() { //TODO: check if setting text to empty actually removes the icons
+    $boardCell.each(function() {
       $(this).text('');
     });
 
@@ -242,7 +242,6 @@ $(document).ready(function() {
     $('#message').css('display','none');
   }
 
-  // TODO: if incorporating AI, need to change first display message
   $('#message').text("Marvel, choose your hero.");
   showMessage();
 
@@ -253,7 +252,6 @@ $(document).ready(function() {
   $marvelIcon.on('click', function() {
 
     const $this = $(this);
-    // $this.addClass('selected'); // TODO: check this. don't think this is needed.
     let characterKey = $(this).attr('id'); // retrieves the id of the clicked character i.e. the character's name
 
     // clicked Marvel character is stored as Player A
@@ -279,7 +277,6 @@ $(document).ready(function() {
   $dcIcon.on('click', function() {
 
     const $this = $(this);
-    // $this.addClass('selected'); // TODO: check this. don't think this is needed.
     let characterKey = $(this).attr('id');// retrieves the id of the clicked character i.e. the character's name
 
     // selected DC character's name on screen
@@ -313,8 +310,6 @@ $(document).ready(function() {
 
   $cmc.on('click', function() {
 
-    // $('#message').css('display', 'none'); // TODO: check if this is redundant
-
     // once character is confirmed, Marvel character board is disabled
     $marvelIcon.addClass('no-events');
     $marvelIcon.css('opacity', '0.5');
@@ -339,8 +334,6 @@ $(document).ready(function() {
   });
 
   $cdc.on('click', function() {
-
-    // hideMessage(); // TODO: check if this is redundant
 
     // show message after DC character is chosen
     $('#message').text("Let's play!");
@@ -636,8 +629,4 @@ $(document).ready(function() {
   $(document).on('click', '#new-game-pop-up', function(event) {
     newGame();
   });
-  // $('#new-game-pop-up').on('click', function() {
-  //   newGame();
-  //   hideMessage();
-  // });
 });
